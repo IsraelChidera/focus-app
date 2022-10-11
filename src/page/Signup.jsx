@@ -1,13 +1,9 @@
 import React, {useState} from 'react';
-import Card from '../components/elements/Card';
 import Text from '../components/elements/Text';
-import Button from '../components/elements/Button';
-import {useNavigate} from 'react-router-dom';
 import { useSignUpEmailPassword } from '@nhost/react'
 import { NavLink, Navigate } from 'react-router-dom'
 
 const Signup = () => {
-    const navigate = useNavigate();
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
@@ -30,7 +26,7 @@ const Signup = () => {
 
     
     if (isSuccess) {
-        return <Navigate to="/home" replace={true} />
+        return <Navigate to="/login" replace={true} />
     }
 
     const disableForm = isLoading || needsEmailVerification
@@ -45,7 +41,7 @@ const Signup = () => {
                             Focus<span className="text-tertiary">App</span>
                         </Text>
 
-                        <h2 className="text-white text-center text-center text-base  tracking-tight text-gray-900">
+                        <h2 className="text-white text-center text-base  tracking-tight text-gray-900">
                             Are you new? Sign up today
                         </h2>                        
                     </div>
