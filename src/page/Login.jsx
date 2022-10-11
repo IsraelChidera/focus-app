@@ -1,17 +1,37 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Card from '../components/elements/Card';
 import Text from '../components/elements/Text';
 import Button from '../components/elements/Button';
 import {useNavigate} from 'react-router-dom';
+import { useSignUpEmailPassword } from '@nhost/react'
+import { Link, Navigate } from 'react-router-dom'
 
 const Login = () => {
     const navigate = useNavigate();
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+    const { signUpEmailPassword, isLoading, isSuccess, needsEmailVerification, isError, error } =
+    useSignUpEmailPassword()
+
 
     const onLogin = (e) => {
         e.preventDefault();
         console.log("e")
-        navigate("/home");
+        // navigate("/home");
+        signUpEmailPassword(email, password, {
+            displayName: `${firstName} ${lastName}`.trim(),
+            metadata: {
+              firstName,
+              lastName
+            }
+        })
     }
+
+    
+    if (isSuccess) {
+        return <Navigate to="/home" replace={true} />
+    }
+
   return (
     <main >        
         <section>
