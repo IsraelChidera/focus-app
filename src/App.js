@@ -3,7 +3,7 @@ import bg from './components/assets/bg.png';
 // import Sidebar from './components/widgets/Sidebar';
 import Home from './page/Home';
 import Notes from './page/Notes';
-import Login from './page/Login';
+import Signup from './page/Signup';
 import Timer from './page/Timer';
 import Stopwatch from './page/Stopwatch';
 import {Routes, Route} from 'react-router-dom';
@@ -72,7 +72,7 @@ function App() {
                   }
                 />              
               
-              <Route path="/" element={<Login/>}/>
+              <Route path="/" element={<Signup/>}/>
             </Routes>          
           </div>
         </section>
