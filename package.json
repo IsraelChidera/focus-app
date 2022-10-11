@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@nhost/react": "^0.13.0",
+    "@tailwindcss/forms": "^0.5.3",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^13.0.0",
     "@testing-library/user-event": "^13.2.1",
