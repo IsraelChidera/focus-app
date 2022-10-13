@@ -11,7 +11,7 @@ const Signup = () => {
     const { signUpEmailPassword, isLoading, isSuccess, needsEmailVerification, isError, error } =
     useSignUpEmailPassword()        
 
-    const onLogin = (e) => {
+    const onSubmit = (e) => {
         e.preventDefault();
         console.log("e")
         // navigate("/home");
@@ -51,7 +51,7 @@ const Signup = () => {
                             Please check your mailbox and follow the verification link to verify your email.
                         </p>
                     ) : (
-                        <form className="mt-8 space-y-6" >
+                        <form onSubmit={onSubmit} className="mt-8 space-y-6" >
                         {/* <input type="hidden" name="remember" /> */}
                             <div className=" space-y-6 rounded-md shadow-sm">
                                 <div>
@@ -59,10 +59,11 @@ const Signup = () => {
                                         First name
                                     </label>
                                     <input
-                                        id="first-name"
+                                        
                                         name="firstname"
                                         type="text"                                    
                                         required
+                                        disabled={disableForm}
                                         className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                                         placeholder="First name"
                                         onChange={(e)=>setFirstName(e.target.value)}
@@ -74,10 +75,11 @@ const Signup = () => {
                                         Last name
                                     </label>
                                     <input
-                                        id="last-name"
+                                       
                                         name="lastname"
-                                        type="text"                                    
+                                                                          
                                         required
+                                        disabled={disableForm}
                                         className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                                         placeholder="Last name"
                                         onChange={(e)=>setLastName(e.target.value)}
@@ -89,9 +91,10 @@ const Signup = () => {
                                     Email address
                                     </label>
                                     <input
-                                        id="email-address"
+                                       
                                         name="email"
-                                        type="email"                                    
+                                        type="email"  
+                                        disabled={disableForm}                                  
                                         required
                                         className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                                         placeholder="Email address"
@@ -104,9 +107,10 @@ const Signup = () => {
                                         Password
                                     </label>
                                     <input
-                                        id="password"
+                                        
                                         name="password"
-                                        type="password"                                    
+                                        type="password"    
+                                        disabled={disableForm}                                
                                         required
                                         className="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                                         placeholder="Password"
@@ -117,14 +121,15 @@ const Signup = () => {
 
                             <div>
                                 <button
-                                    // type="submit"
-                                    onClick={onLogin}
+                                    type="submit"
+                                    disabled={disableForm}
+                                    // onClick={onLogin}
                                     className="group relative flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                                 >                                
                                     {isLoading ? "Setting up your account . . ." : 'Create account'}
                                 </button>
                             </div>
-
+                            {console.log(isError)}
                             {isError ? <p className={{fontSize:"14px", color:"red"}}>{error?.message}</p> : null}
                         </form>
                     )}
