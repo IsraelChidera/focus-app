@@ -4,32 +4,36 @@ import { useSignUpEmailPassword } from '@nhost/react'
 import { NavLink, Navigate } from 'react-router-dom'
 
 const Signup = () => {
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
-    const [email, setEmail] = useState('');
+
+// error
+    const [firstName, setFirstName] = useState('')
+    const [lastName, setLastName] = useState('')
+    const [email, setEmail] = useState('')
     const [password, setPassword] = useState('');
-    const { signUpEmailPassword, isLoading, isSuccess, needsEmailVerification, isError, error } =
-    useSignUpEmailPassword()        
-
-    const onSubmit = (e) => {
-        e.preventDefault();
-        console.log("e")
-        // navigate("/home");
-        signUpEmailPassword(email, password, {
-            displayName: `${firstName} ${lastName}`.trim(),
-            metadata: {
-              firstName,
-              lastName
-            }
-        })
-    }
-
     
-    if (isSuccess) {
-        return <Navigate to="/login" replace={true} />
+  
+    const { signUpEmailPassword, isLoading, isSuccess, needsEmailVerification, isError, error } =
+      useSignUpEmailPassword()
+  
+    const onSubmit = async (e) => {
+      e.preventDefault()
+  
+      await signUpEmailPassword(email, password, {
+        displayName: `${firstName} ${lastName}`.trim(),
+        metadata: {
+          firstName,
+          lastName
+        }
+      })
+    
     }
-
+  
+    if (isSuccess) {
+      return <Navigate to="/" replace={true} />
+    }
+  
     const disableForm = isLoading || needsEmailVerification
+  
 
   return (
     <main >        
@@ -59,14 +63,17 @@ const Signup = () => {
                                         First name
                                     </label>
                                     <input
-                                        
-                                        name="firstname"
-                                        type="text"                                    
-                                        required
+                                        label="First name"
+                                        value={firstName}
+                                        onChange={(e) => setFirstName(e.target.value)}
                                         disabled={disableForm}
+                                        // name="firstname"
+                                        // type="text"                                    
+                                        // required
+                                        // disabled={disableForm}
                                         className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                                         placeholder="First name"
-                                        onChange={(e)=>setFirstName(e.target.value)}
+                                        // onChange={(e)=>setFirstName(e.target.value)}
                                     />
                                 </div>
 
@@ -75,14 +82,18 @@ const Signup = () => {
                                         Last name
                                     </label>
                                     <input
-                                       
-                                        name="lastname"
-                                                                          
-                                        required
+                                        label="Last name"
+                                        value={lastName}
+                                        onChange={(e) => setLastName(e.target.value)}
                                         disabled={disableForm}
+                                        required
+                                        // name="lastname"
+                                                                          
+                                        // required
+                                        // disabled={disableForm}
                                         className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                                         placeholder="Last name"
-                                        onChange={(e)=>setLastName(e.target.value)}
+                                        // onChange={(e)=>setLastName(e.target.value)}
                                     />
                                 </div>
                                 
@@ -91,14 +102,15 @@ const Signup = () => {
                                     Email address
                                     </label>
                                     <input
-                                       
-                                        name="email"
-                                        type="email"  
-                                        disabled={disableForm}                                  
+                                        type="email"
+                                        label="Email address"
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
+                                        disabled={disableForm}
                                         required
                                         className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                                         placeholder="Email address"
-                                        onChange={(e)=>setEmail(e.target.value)}
+                                        // onChange={(e)=>setEmail(e.target.value)}
                                     />
                                 </div>
 
@@ -107,14 +119,15 @@ const Signup = () => {
                                         Password
                                     </label>
                                     <input
-                                        
-                                        name="password"
-                                        type="password"    
-                                        disabled={disableForm}                                
+                                        type="password"
+                                        label="Create password"
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
+                                        disabled={disableForm}
                                         required
                                         className="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                                         placeholder="Password"
-                                        onChange={(e)=>setPassword(e.target.value)}
+                                        // onChange={(e)=>setPassword(e.target.value)}
                                     />
                                 </div>
                             </div>                        
@@ -129,8 +142,9 @@ const Signup = () => {
                                     {isLoading ? "Setting up your account . . ." : 'Create account'}
                                 </button>
                             </div>
-                            {console.log(isError)}
-                            {isError ? <p className={{fontSize:"14px", color:"red"}}>{error?.message}</p> : null}
+                           
+                            {/* {isError ? <p >{error?.message}</p> : null} */}
+                            {isError ? <p>{error?.message}</p> : null}
                         </form>
                     )}
 

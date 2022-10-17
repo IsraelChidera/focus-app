@@ -13,8 +13,8 @@ import Layout from './components/widgets/Layout';
 import { NhostClient, NhostReactProvider } from '@nhost/react'
 
 const nhost = new NhostClient({
-  subdomain: "eu-central-1",
-  region: "zmiedqegrgbnutmpplnu"
+  subdomain: 'eu-central-1',
+  region: 'zmiedqegrgbnutmpplnu'
 })
 
 

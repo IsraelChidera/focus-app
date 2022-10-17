@@ -2,15 +2,23 @@ import React, { useState, useRef } from 'react';
 import Card from '../components/elements/Card';
 import Text from '../components/elements/Text';
 import Button from '../components/elements/Button';
+import Time from '../components/widgets/Time';
+import Settings from '../components/widgets/Settings';
 
 const Home = () => {
     const [ openTaskInput, setOpenTaskInput ] = useState(false);
+    const [open, setOpen] = useState(false);
     const inputRef = useRef(null);
 
     const handleTaskButton = () => {
         setOpenTaskInput(true);
         inputRef.current.focus();
     }
+
+    const handleSettings = () => {
+        setOpen(!open);
+    }
+
   return (
     <section className="text-white pt-10 pb-20">        
 
@@ -59,14 +67,22 @@ const Home = () => {
             </Card>
 
             <Card className="py-4">
-                <div className="flex justfiy-between items-center">
-                    <Text className="text-sm font-semibold">
-                        Daily progress
-                    </Text>
+                <div>
+                    <div className="flex justify-between">
+                        <Text className="text-sm font-semibold">
+                            Daily progress
+                        </Text>
 
-                    <Text>
+                        <Button 
+                            onClick={handleSettings} 
+                            className="py-1 px-6"
+                        >
+                            Settings
+                        </Button>
+                    </div>
 
-                    </Text>
+                    {open? <Settings/> : <Time/>}
+
                 </div>
             </Card>
 

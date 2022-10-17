@@ -1,9 +1,15 @@
 import React from 'react';
 
+
+
 const Timer = () => {
   return (
     <section className="mt-10">
-        Timer
+        <p className="text-white">
+          Timer
+        </p>
+
+        
     </section>
   )
 }
