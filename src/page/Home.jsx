@@ -8,6 +8,8 @@ import Settings from '../components/widgets/Settings';
 const Home = () => {
     const [ openTaskInput, setOpenTaskInput ] = useState(false);
     const [open, setOpen] = useState(false);
+    const [workMin, setWorkMin] = useState(45);
+    const [breakMin, setBreakMin] = useState(15);
     const inputRef = useRef(null);
 
     const handleTaskButton = () => {
@@ -16,7 +18,7 @@ const Home = () => {
     }
 
     const handleSettings = () => {
-        setOpen(!open);
+        setOpen(true);
     }
 
   return (
@@ -81,7 +83,21 @@ const Home = () => {
                         </Button>
                     </div>
 
-                    {open? <Settings/> : <Time/>}
+                    {open? <Settings 
+                            setOpen={setOpen} 
+                            workMin={workMin}
+                            breakMin={breakMin}
+                            setWorkMin={setWorkMin}
+                            setBreakMin={setBreakMin}
+                        /> 
+                        : 
+                        <Time
+                            workMin={workMin}
+                            breakMin={breakMin}
+                            setWorkMin={setWorkMin}
+                            setBreakMin={setBreakMin}
+                        />
+                    }
 
                 </div>
             </Card>

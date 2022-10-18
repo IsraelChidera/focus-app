@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { CircularProgressbar, buildStyles  } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import Button from '../elements/Button';
@@ -8,6 +8,13 @@ const red = '#f54e4e';
 const green = '#4aec8c';
 
 const Time = () => {
+    
+    const [isPaused, setIsPaused] = useState(true);
+
+    useEffect(() => {
+
+    }, [])
+
     return (
         <>
             <Card>
@@ -41,17 +48,18 @@ const Time = () => {
                     />
                 </div>
 
-                <div className="flex space-x-4">
-                    <div>
-                        <Button className="py-1 px-6">
-                        Play
-                        </Button>
-                    </div>
-
+                <div className="flex items-center justify-center mt-6 space-x-4">
+                  {isPaused? (
                     <Button className="py-1 px-6">
-                    Pause
+                        Play
                     </Button>
-
+                  )
+                  :
+                  (
+                    <Button className="py-1 px-6">
+                        Pause
+                    </Button>
+                  )}
                     
                 </div>
             </Card>
