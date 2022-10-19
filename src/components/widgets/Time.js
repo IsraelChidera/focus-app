@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { CircularProgressbar, buildStyles  } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import Button from '../elements/Button';
@@ -7,39 +7,79 @@ import Card from '../elements/Card';
 const red = '#f54e4e';
 const green = '#4aec8c';
 
-const Time = () => {
+const Time = ({ workMin, breakMin, setBreakMin, setWorkMin}) => {
     
     const [isPaused, setIsPaused] = useState(true);
+    const [secondsLeft, setSecondsLeft] = useState(0);
+    const [mode, setMode] = useState("work");
+    const secondsLeftRef = useRef(secondsLeft);
+    const isPausedRef = useRef(isPaused);
+    const modeRef = useRef(mode);
+
+    
+    function tick(){
+        secondsLeftRef.current--;
+        setSecondsLeft(secondsLeftRef.current);
+    }
+
+    const initTimer = () => {
+        setSecondsLeft(workMin*60);
+    }
+
+    const switchMode = () => {
+        const nextMode = modeRef.current === 'work'? 'break': 'work';
+        const nextSeconds = (nextMode ==='work' ? workMin : breakMin)*60;
+        setMode(nextMode);
+        modeRef.current = nextMode;
+        setSecondsLeft(nextSeconds);
+        secondsLeftRef.current = nextSeconds;
+    }
 
     useEffect(() => {
+        initTimer();
 
-    }, [])
+        const interval = setInterval(()=>{
+            if(isPausedRef.current) {
+                return;
+            }
+
+            if(secondsLeftRef.current === 0){
+               return switchMode();
+            }
+
+            tick();
+            console.log(tick())
+            console.log(secondsLeftRef.current)
+        }, 1000);
+
+        return () => clearInterval(interval);
+    }, [workMin, breakMin, setBreakMin, setWorkMin])
+
+    const totalSeconds = mode === 'work'? workMin*60 : breakMin*60
+    const percentage = Math.round(secondsLeft/totalSeconds)*100;
+
+    const minutes = Math.floor(secondsLeft/60);
+    let seconds = secondsLeft%60;
+    if(seconds<10) {
+        seconds= '0' + seconds;
+    }
+
+    console.log(minutes,seconds)
+
 
     return (
         <>
             <Card>
                 <div>
                     <CircularProgressbar 
-                        value={66} 
-                        text={`${66}%`} 
+                        value={percentage} 
+                        // text={`${66}%`} 
+                        text={minutes+":"+seconds}
                         styles={buildStyles({
-                        // Rotation of path and trail, in number of turns (0-1)
-                        rotation: 0.5,
-                        // rotation,
-                    
-                        // Whether to use rounded or flat corners on the ends - can use 'butt' or 'round'
-                        strokeLinecap: 'butt',
-                    
-                        // Text size
-                        // textSize: '16px',
-                    
-                        // How long animation takes to go from one percentage to another, in seconds
-                        pathTransitionDuration: 0.5,
-                    
-                        // Can specify path transition in more detail, or remove it entirely
-                        // pathTransition: 'none',
-                    
-                        // Colors
+                        
+                        rotation: 0.5,                        
+                        strokeLinecap: 'butt',                                            
+                        pathTransitionDuration: 0.5,                    
                         pathColor: red,
                         textColor: '#f88',
                         trailColor: '#d6d6d6',
