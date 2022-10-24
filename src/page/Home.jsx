@@ -1,9 +1,11 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Card from '../components/elements/Card';
 import Text from '../components/elements/Text';
 import Button from '../components/elements/Button';
 import Time from '../components/widgets/Time';
 import Settings from '../components/widgets/Settings';
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from '../firebase'; 
 
 const Home = () => {
     const [ openTaskInput, setOpenTaskInput ] = useState(false);
@@ -20,6 +22,22 @@ const Home = () => {
     const handleSettings = () => {
         setOpen(true);
     }
+
+    useEffect(()=>{
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+              // User is signed in, see docs for a list of available properties
+              // https://firebase.google.com/docs/reference/js/firebase.User
+              const uid = user.uid;
+              // ...
+              console.log("uid", uid)
+            } else {
+              // User is signed out
+              // ...
+              console.log("user is logged out")
+            }
+          });
+    }, [])
 
   return (
     <section className="text-white pt-10 pb-20">        
@@ -157,10 +175,7 @@ const Home = () => {
                         </section>
                     )
                 }
-                
-
-                
-                
+             
             </Card>
         </section>
         
