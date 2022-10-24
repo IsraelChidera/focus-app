@@ -23,17 +23,8 @@ function App() {
   return (
     <NhostReactProvider nhost={nhost}>
       <div className="App bg-primary">
-        <section 
-          // className="relative "
-        >
-          {/* <div className="fixed top-0 left-0 h-screen bg-sidebar w-72">
-            < Sidebar />
-          </div> */}
-
-          <div 
-            // className="pl-80 pr-4"
-          >
-            {/* <Navbar/> */}
+        <section>          
+          <div>            
             <Routes>
            
                 <Route 
@@ -45,6 +36,7 @@ function App() {
                   
                   }
                 />
+
                 <Route 
                   path="/notes"
                   element={
@@ -54,6 +46,7 @@ function App() {
                   
                   }
                 />
+
                 <Route 
                   path="/timer"
                   element={
@@ -63,6 +56,7 @@ function App() {
                   
                   }
                 />
+                
                 <Route 
                   path="/stopwatch"
                   element={
