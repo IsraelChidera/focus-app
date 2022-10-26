@@ -13,6 +13,12 @@ const Home = () => {
     const [workMin, setWorkMin] = useState(45);
     const [breakMin, setBreakMin] = useState(15);
     const inputRef = useRef(null);
+    const [remainingTime, setRemainingTime] = useState({
+        seconds: '00',
+        minutes: '00',
+        hours: '00',
+        days: '00'
+    })
 
     const handleTaskButton = () => {
         setOpenTaskInput(true);
@@ -37,6 +43,12 @@ const Home = () => {
               console.log("user is logged out")
             }
           });
+
+        const intervalID = setInterval(()=>{
+            // console.log("yes")
+        }, 1000)  
+
+        return () => clearInterval(intervalID);
     }, [])
 
   return (
@@ -87,6 +99,21 @@ const Home = () => {
             </Card>
 
             <Card className="py-4">
+                <div>
+                    <p>
+                        {remainingTime.days} days
+                    </p>
+                    <p>
+                        {remainingTime.hours} hours
+                    </p>
+                    <p>
+                        {remainingTime.minutes} minutes
+                    </p>
+                    <p>
+                        {remainingTime.seconds} seconds
+                    </p>
+                </div>
+
                 <div>
                     <div className="flex justify-between">
                         <Text className="text-sm font-semibold">
@@ -186,4 +213,3 @@ const Home = () => {
 export default Home
 
 
-// FocusAssist is a single platform where you can help keep notes and work all in one place. It is a unique solution that helps you stay focused using the Pomodoro technique, thereby improving your productivity. It replaces your conventional to-do list and helps save time.

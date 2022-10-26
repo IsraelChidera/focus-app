@@ -10,18 +10,13 @@ import Stopwatch from './page/Stopwatch';
 import {Routes, Route} from 'react-router-dom';
 // import Navbar from './components/widgets/Navbar';
 import Layout from './components/widgets/Layout';
-import { NhostClient, NhostReactProvider } from '@nhost/react'
-
-const nhost = new NhostClient({
-  subdomain: 'eu-central-1',
-  region: 'zmiedqegrgbnutmpplnu'
-})
+import { BrowserRouter as Router } from 'react-router-dom';
 
 
 function App() {
 
   return (
-    <NhostReactProvider nhost={nhost}>
+    <Router>
       <div className="App bg-primary">
         <section>          
           <div>            
@@ -73,9 +68,8 @@ function App() {
           </div>
         </section>
 
-        {/* <img src={bg} /> */}
       </div>
-    </NhostReactProvider>
+    </Router>
   );
 }
 
