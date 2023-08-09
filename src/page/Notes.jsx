@@ -25,7 +25,6 @@ const Notes = () => {
   const [error, setError] = useState("");
   const [user, setUser] = useState("");
   const [data, setData] = useState([]);
-  const dat = []
 
   const handleOpenSearchTab = () => {
     setOpenSearchNotes(prevState => !prevState);
@@ -46,7 +45,7 @@ const Notes = () => {
       })
 
       if (docRef.id.length > 0) {
-        setLoading(false);        
+        setLoading(false);
         setError("");
         setNotes("");
       }
@@ -58,36 +57,34 @@ const Notes = () => {
   }
 
   const fetchData = async () => {
-   
-  }
+    try {
+      // const querySnapshot = await getDocs(collection(db, "notes"), where("uid", "==", user));
+
+      const q = query(collection(db, "notes"), where("uid", "==", user));
+      const querySnapshot = await getDocs(q);
+      const fetchedData = [];
+      querySnapshot.forEach((doc) => {
+        fetchedData.push({ id: doc.id, ...doc.data() });
+      });
+
+      setData(fetchedData);
+    } catch (error) {
+      console.error("Error fetching documents:", error);
+    }
+  };
 
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         const uid = user.uid;
-        setUser(uid);                
+        setUser(uid);
       } else {
         console.log("Wahala de");
       }
     });
 
-    const fetchData = async () => {
-      try {
-        // const querySnapshot = await getDocs(collection(db, "notes"), where("uid", "==", user));
-
-        const q = query(collection(db, "notes"), where("uid", "==", user));
-        const querySnapshot = await getDocs(q);
-        const fetchedData = [];
-        querySnapshot.forEach((doc) => {
-          fetchedData.push({ id: doc.id, ...doc.data() });
-        });
-
-        setData(fetchedData);
-      } catch (error) {
-        console.error("Error fetching documents:", error);
-      }
-    };
+    
 
     fetchData();
 
@@ -96,10 +93,9 @@ const Notes = () => {
     // querySnapshot.forEach((doc) => {
     //   setData(doc.id, " => ", doc.data());      
     // })
-  }, [])
-  
+  }, [user])
+
   console.log(data);
-  console.log(dat);
 
   return (
     <section className="text-white mt-10 mb-20">
@@ -192,6 +188,20 @@ const Notes = () => {
         <button type="submit" onClick={handleAddNotesToDb} className="px-6 py-2 text-xs text-white bg-sidebar">
           {loading ? "Adding note . . ." : "Add note"}
         </button>
+      </div>
+
+      <div className='grid md:grid-cols-3 grid-cols-2 gap-x-4 gap-y-6 '>
+        {
+          data.map((note, index) => (
+
+            <div className=' todo-weekly bg-white p-4 rounded-lg shadow-md' key={index}>
+              <p>
+                {note.notes}
+              </p>
+            </div>
+
+          ))
+        }
       </div>
     </section>
   )
