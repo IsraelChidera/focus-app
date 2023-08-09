@@ -12,7 +12,7 @@ import editOption8 from '../components/assets/justify-icon-2.svg';
 import editOption9 from '../components/assets/justify-icon-3.svg';
 import editOption10 from '../components/assets/add-image-icon.svg';
 import editOption11 from '../components/assets/add-link-icon.svg';
-import { collection, addDoc, getDocs } from "firebase/firestore";
+import { collection, query, where, addDoc, getDocs } from "firebase/firestore";
 import { db, auth } from '../firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 
@@ -74,8 +74,10 @@ const Notes = () => {
 
     const fetchData = async () => {
       try {
-        const querySnapshot = await getDocs(collection(db, "notes"));
+        // const querySnapshot = await getDocs(collection(db, "notes"), where("uid", "==", user));
 
+        const q = query(collection(db, "notes"), where("uid", "==", user));
+        const querySnapshot = await getDocs(q);
         const fetchedData = [];
         querySnapshot.forEach((doc) => {
           fetchedData.push({ id: doc.id, ...doc.data() });
