@@ -150,7 +150,7 @@ const Home = () => {
             <Card className="py-4 col-span-2">
                 <div className="flex justify-between">
                     <Text className="text-lg font-semibold mb-10">
-                        Tasks
+                        Notes
                     </Text>
 
                     <div 

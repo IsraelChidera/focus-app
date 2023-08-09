@@ -28,9 +28,9 @@ const Navbar = () => {
                     Welcome, <span className="italic"> Name </span>
                 </Text>
 
-                <Button onClick={handleLogout} className="py-1 px-6">
+                <button className="px-6 py-2 text-xs text-white bg-sidebar" onClick={handleLogout}>
                     Logout
-                </Button>
+                </button>
             </nav>
         </>
     )

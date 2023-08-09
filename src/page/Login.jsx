@@ -12,7 +12,7 @@ const Login = () => {
     const onLogin = (e) => {
         e.preventDefault();
         signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
+        .then((userCredential) => { 
             // Signed in 
             const user = userCredential.user;
             navigate("/home")
