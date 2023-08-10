@@ -15,6 +15,8 @@ import editOption11 from '../components/assets/add-link-icon.svg';
 import { collection, query, where, addDoc, getDocs } from "firebase/firestore";
 import { db, auth } from '../firebase';
 import { onAuthStateChanged } from 'firebase/auth';
+import { NavLink } from 'react-router-dom';
+import moment from 'moment/moment';
 
 
 const Notes = () => {
@@ -41,7 +43,8 @@ const Notes = () => {
     try {
       const docRef = await addDoc(collection(db, "notes"), {
         notes: notes,
-        uid: user
+        uid: user,
+        dateCreated: moment().format("MMM Do YY")
       })
 
       if (docRef.id.length > 0) {
@@ -59,13 +62,14 @@ const Notes = () => {
   const fetchData = async () => {
     try {
       // const querySnapshot = await getDocs(collection(db, "notes"), where("uid", "==", user));
-
+      setLoading(true);
       const q = query(collection(db, "notes"), where("uid", "==", user));
       const querySnapshot = await getDocs(q);
       const fetchedData = [];
       querySnapshot.forEach((doc) => {
+        setLoading(false);
         fetchedData.push({ id: doc.id, ...doc.data() });
-      });
+      });      
 
       setData(fetchedData);
     } catch (error) {
@@ -84,15 +88,10 @@ const Notes = () => {
       }
     });
 
-    
+  }, [user])
 
+  useEffect(() => {
     fetchData();
-
-    // const querySnapshot = getDocs(collection(db, "notes"));
-
-    // querySnapshot.forEach((doc) => {
-    //   setData(doc.id, " => ", doc.data());      
-    // })
   }, [user])
 
   console.log(data);
@@ -171,7 +170,7 @@ const Notes = () => {
           <form>
             <div>
               <textarea
-                className='w-full bg-sidebar text-sm' rows="12"
+                className='w-full bg-sidebar text-sm' rows="6"
                 placeholder='. . . what is on your mind?'
                 name="notes"
                 id="note"
@@ -190,18 +189,35 @@ const Notes = () => {
         </button>
       </div>
 
-      <div className='grid md:grid-cols-3 grid-cols-2 gap-x-4 gap-y-6 '>
+      <div className='grid md:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 grid-cols-2 gap-x-4 gap-y-6 '>
         {
-          data.map((note, index) => (
+          data.length == 0 && <div>
+            <p>
+              You have no notes
+            </p>
+          </div>
+        }
+        {
+          data.map((note) => (
 
-            <div className=' todo-weekly bg-white p-4 rounded-lg shadow-md' key={index}>
-              <p>
-                {note.notes}
+            <NavLink to={`/notes/${note.id}`} className='relative todo-weekly rounded-lg shadow-md' key={note.id}>
+              <p style={{ fontSize: "10px" }} className='text-right px-2'>
+                {note.dateCreated}
               </p>
-            </div>
+              <div className='pt-2 border-b border-sidebar'></div>
+              <p style={{wordWrap: "break-word"}} className='p-2 text-xs'>
+                {note.notes.length>=257? note.notes.substring(0,257) + " . . ." : note.notes }
+              </p>
+
+              <div>
+
+              </div>
+            </NavLink>
 
           ))
         }
+
+
       </div>
     </section>
   )
