@@ -64,9 +64,8 @@ const Notes = () => {
   }
 
   const fetchData = async () => {
-    try {
-      // const querySnapshot = await getDocs(collection(db, "notes"), where("uid", "==", user));
-      setLoading(true);
+    try {      
+      // setLoading(true);
       const q = query(collection(db, "notes"), where("uid", "==", user));
       const querySnapshot = await getDocs(q);
       const fetchedData = [];
@@ -192,7 +191,7 @@ const Notes = () => {
         </button>
       </div>
 
-      <div className='grid md:grid-cols-4 grid-cols-2 gap-x-4 gap-y-6 '>
+      <div className='mt-16 grid md:grid-cols-4 grid-cols-2 gap-x-4 gap-y-6 '>
         {
           data.length == 0 && <div>
             <p>
