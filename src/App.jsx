@@ -11,6 +11,7 @@ import { Routes, Route } from 'react-router-dom';
 // import Navbar from './components/widgets/Navbar';
 import Layout from './components/widgets/Layout';
 import { BrowserRouter as Router } from 'react-router-dom';
+import NoteDetail from './page/NoteDetail';
 
 
 function App() {
@@ -30,11 +31,17 @@ function App() {
                 />
 
                 <Route
+                  path="/notes/:id"
+
+                  element={<NoteDetail />}
+                />
+
+                <Route
                   path="/notes"
                   element={
-                   
-                      < Notes />
-                    
+
+                    < Notes />
+
 
                   }
                 />
@@ -42,18 +49,18 @@ function App() {
                 <Route
                   path="/timer"
                   element={
-                
-                      < Timer />
-                  
+
+                    < Timer />
+
                   }
                 />
 
                 <Route
                   path="/stopwatch"
                   element={
-                   
-                      < Stopwatch />
-                  
+
+                    < Stopwatch />
+
                   }
                 />
               </Route>
