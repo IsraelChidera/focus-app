@@ -72,7 +72,7 @@ const Notes = () => {
       querySnapshot.forEach((doc) => {
         setLoading(false);
         fetchedData.push({ id: doc.id, ...doc.data() });
-      });      
+      });
 
       setData(fetchedData);
     } catch (error) {
