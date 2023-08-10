@@ -47,11 +47,15 @@ const Notes = () => {
         dateCreated: moment().format("MMM Do YY")
       })
 
-      if (docRef.id.length > 0) {
-        setLoading(false);
-        setError("");
-        setNotes("");
-      }
+      setLoading(false);
+      setError("");
+      setNotes("");
+
+      // if (docRef.id.length > 0) {
+      //   setLoading(false);
+      //   setError("");
+      //   setNotes("");
+      // }
     } catch (error) {
       console.error("Error adding document:", error);
       setError("Error adding the note.");
@@ -92,9 +96,8 @@ const Notes = () => {
 
   useEffect(() => {
     fetchData();
-  }, [user])
-
-  console.log(data);
+  }, [user, notes])
+  
 
   return (
     <section className="text-white mt-10 mb-20">
