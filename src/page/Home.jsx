@@ -8,7 +8,8 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth } from '../firebase';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCurrentUser } from '../store/features/userSlice';
-import { getAllUserNotes } from '../store/features/noteSlice';
+import { notesFetch } from '../store/features/noteSlice';
+// import { getAllUserNotes } from '../store/features/noteSlice';
 
 const Home = () => {
     const [openTaskInput, setOpenTaskInput] = useState(false);
@@ -53,9 +54,7 @@ const Home = () => {
 
         return () => clearInterval(intervalID);
     }, [])
-
-
-
+    
     const user = useSelector((state) => state.user.value);
     const dispatch = useDispatch();
     useEffect(() => {
@@ -63,10 +62,8 @@ const Home = () => {
     }, [dispatch])
     console.log("user here: ", user);
 
-    const notes = useSelector((state) => state.note.value);
-
     useEffect(() => {
-        dispatch(getAllUserNotes(user))
+        dispatch(notesFetch(user))
     }, [dispatch, user])
 
 
@@ -79,11 +76,11 @@ const Home = () => {
                         Ready, set, focus!
                     </Text>
 
-                    <ul>
+                    {/* <ul>
                         {notes.map((note) => (
                             <li key={note.id}>{note.title}</li>
                         ))}
-                    </ul>              
+                    </ul>               */}
 
                     <Text className="text-sm pt-2">
                         Achieve your daily goals and get more
