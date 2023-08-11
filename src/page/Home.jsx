@@ -9,6 +9,7 @@ import { auth } from '../firebase';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCurrentUser } from '../store/features/userSlice';
 import { notesFetch } from '../store/features/noteSlice';
+import { useNavigate } from 'react-router-dom';
 // import { getAllUserNotes } from '../store/features/noteSlice';
 
 const Home = () => {
@@ -17,6 +18,9 @@ const Home = () => {
     const [workMin, setWorkMin] = useState(45);
     const [breakMin, setBreakMin] = useState(15);
     const inputRef = useRef(null);
+
+    const navigate = useNavigate();
+
     const [remainingTime, setRemainingTime] = useState({
         seconds: '00',
         minutes: '00',
@@ -54,9 +58,11 @@ const Home = () => {
 
         return () => clearInterval(intervalID);
     }, [])
-    
+
     const user = useSelector((state) => state.user.value);
+    const { value, status } = useSelector((state) => state.note);
     const dispatch = useDispatch();
+
     useEffect(() => {
         dispatch(getCurrentUser());
     }, [dispatch])
@@ -75,12 +81,6 @@ const Home = () => {
                     <Text className="font-semibold text-xl">
                         Ready, set, focus!
                     </Text>
-
-                    {/* <ul>
-                        {notes.map((note) => (
-                            <li key={note.id}>{note.title}</li>
-                        ))}
-                    </ul>               */}
 
                     <Text className="text-sm pt-2">
                         Achieve your daily goals and get more
@@ -177,7 +177,7 @@ const Home = () => {
 
                         <div
                             className="text-2xl cursor-pointer"
-                            onClick={handleTaskButton}
+                            onClick={() => navigate("/notes")}
                         >
                             +
                         </div>
@@ -194,14 +194,35 @@ const Home = () => {
                             </Text>
 
                             <button
-                                className="rounded-lg text-sm py-1.5 px-8 text-white bg-secondary"
+                                onClick={() => navigate("/notes")}
+                                className="rounded-lg text-xs py-1.5 px-8 text-white bg-secondary"
                             >
                                 Add note
                             </button>
                         </div>
-
                     </section>
 
+                    <div className='mt-20'>
+                        <div className='grid grid-cols-4 gap-y-10 gap-x-4 w-full'>
+                            {
+                                value.slice(0, 4).map((note) => (
+                                    <div className='relative todo-weekly rounded-lg shadow-md' key={note.id}>
+                                        <Text style={{ fontSize: "10px" }} className='text-right px-2'>
+                                            {note.dateCreated}
+                                        </Text>
+                                        <div className='pt-2 border-b border-sidebar'></div>
+                                        <Text style={{ wordWrap: "break-word" }} className='p-2 text-xs'>
+                                            {note.notes.length >= 257 ? note.notes.substring(0, 257) + " . . ." : note.notes}
+                                        </Text>
+
+                                        <div>
+
+                                        </div>
+                                    </div>
+                                ))
+                            }
+                        </div>
+                    </div>
 
                 </Card>
             </section>

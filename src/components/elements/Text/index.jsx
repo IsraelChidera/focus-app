@@ -1,12 +1,13 @@
 import React from 'react'
 
-const index = ({children, className}) => {
+const index = ({children, className, ...rest}) => {
   return (
-    <div
+    <p
         className={`${className}`}
+        {...rest}
     >
         {children}
-    </div>
+    </p>
   )
 }
 

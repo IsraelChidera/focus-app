@@ -10,10 +10,9 @@
 }
 
 .todo-weekly {
-    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    box-shadow: rgba(0, 0, 0, 0.55) 0px 5px 15px;
     background: #1e272e;
-    height: 200px;
-   
+    height: 200px;   
 }
 
 

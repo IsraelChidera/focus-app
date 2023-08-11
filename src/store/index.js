@@ -8,5 +8,5 @@ export const store = configureStore({
     user: userReducer,
     note: noteReducer
   },
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger),
+//   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger),
 })
