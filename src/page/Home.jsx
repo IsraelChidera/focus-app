@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getCurrentUser } from '../store/features/userSlice';
 import { notesFetch } from '../store/features/noteSlice';
 import { useNavigate } from 'react-router-dom';
+import Pomodoro from '../components/widgets/Pomodoro';
 // import { getAllUserNotes } from '../store/features/noteSlice';
 
 const Home = () => {
@@ -18,6 +19,10 @@ const Home = () => {
     const [workMin, setWorkMin] = useState(45);
     const [breakMin, setBreakMin] = useState(15);
     const inputRef = useRef(null);
+
+    const user = useSelector((state) => state.user.value);
+    const { value, status } = useSelector((state) => state.note);
+    const dispatch = useDispatch();
 
     const navigate = useNavigate();
 
@@ -59,10 +64,6 @@ const Home = () => {
         return () => clearInterval(intervalID);
     }, [])
 
-    const user = useSelector((state) => state.user.value);
-    const { value, status } = useSelector((state) => state.note);
-    const dispatch = useDispatch();
-
     useEffect(() => {
         dispatch(getCurrentUser());
     }, [dispatch])
@@ -77,51 +78,10 @@ const Home = () => {
         <section className="text-white pt-10 pb-20">
 
             <section className="grid grid-cols-2 gap-4">
-                <Card className="text-center pb-16">
-                    <Text className="font-semibold text-xl">
-                        Ready, set, focus!
-                    </Text>
-
-                    <Text className="text-sm pt-2">
-                        Achieve your daily goals and get more
-                        done using the Pomodoro Technique
-                    </Text>
-
-                    <div className="flex justify-center items-center mt-8">
-                        <div className="py-2 px-4 rounded-md border-b border-x-0 border-x-white border-t-0 border-t-white border-white ">
-                            <div className='px-4 flex space-x-4 rounded-md'>
-                                <div className='flex flex-col'>
-                                    <span className="text-4xl font-semibold">
-                                        55
-                                    </span>
-                                    <span className="text-xs pt-2">
-                                        mins
-                                    </span>
-                                </div>
-
-                                <div className='flex flex-col justify-between'>
-                                    <span>
-                                        ^
-                                    </span>
-                                    <span>
-                                        v
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <Text className="text-sm mt-6">
-                        You will have 3 breaks
-                    </Text>
-
-                    <Button className="mt-6">
-                        Start focus session
-                    </Button>
-                </Card>
+                <Pomodoro />
 
                 <Card className="py-4">
-                    <div>
+                    <div className='hidden'>
                         <p>
                             {remainingTime.days} days
                         </p>
@@ -169,6 +129,8 @@ const Home = () => {
                     </div>
                 </Card>
 
+
+                {/* notes */}
                 <Card className="py-4 col-span-2">
                     <div className="flex justify-between">
                         <Text className="text-lg font-semibold mb-10">

@@ -39,28 +39,21 @@ function App() {
                 <Route
                   path="/notes"
                   element={
-
                     < Notes />
-
-
                   }
                 />
 
                 <Route
                   path="/timer"
                   element={
-
                     < Timer />
-
                   }
                 />
 
                 <Route
                   path="/stopwatch"
                   element={
-
                     < Stopwatch />
-
                   }
                 />
               </Route>

@@ -48,7 +48,7 @@ const Settings = ({setOpen, workMin, breakMin, setBreakMin, setWorkMin}) => {
 
             <div>
                 <Button onClick={backButton} className="py-1 px-6">
-                    {"<--- "}Back
+                   Get started
                 </Button>
             </div>
             

@@ -18,7 +18,7 @@ const Time = ({ workMin, breakMin, setBreakMin, setWorkMin}) => {
 
     
     function tick(){
-        secondsLeftRef.current--;
+        secondsLeftRef.current= secondsLeftRef.current -1;
         setSecondsLeft(secondsLeftRef.current);
     }
 
@@ -90,7 +90,7 @@ const Time = ({ workMin, breakMin, setBreakMin, setWorkMin}) => {
 
                 <div className="flex items-center justify-center mt-6 space-x-4">
                   {isPaused? (
-                    <Button className="py-1 px-6">
+                    <Button onClick={() => tick()} className="py-1 px-6">
                         Play
                     </Button>
                   )
