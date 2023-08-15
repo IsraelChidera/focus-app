@@ -34,7 +34,7 @@ const NoteDetail = () => {
         } catch (error) {
             console.error("Error fetching documents:", error);
         }
-    };  
+    };
 
     const handleDeleteNote = async () => {
         try {
@@ -85,11 +85,11 @@ const NoteDetail = () => {
                     {note.dateCreated}
                 </p>
             </div>
-            <p className='text-sm mt-8'>
-                {
-                    note.notes
-                }
-            </p>
+            <div className='text-sm mt-8'>               
+                <div
+                    dangerouslySetInnerHTML={{ __html: note.notes }}
+                />
+            </div>
 
             <div className='flex justify-center space-x-4 text-lg mt-20'>
                 <BsPencilSquare className='cursor-pointer' />

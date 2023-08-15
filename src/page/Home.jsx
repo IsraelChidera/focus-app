@@ -78,7 +78,7 @@ const Home = () => {
         <section className="text-white pt-10 pb-20">
 
             <section className="grid grid-cols-1 gap-4">
-                <Pomodoro />                
+                <Pomodoro />
 
                 {/* notes */}
                 <Card className="py-4 col-span-2">
@@ -106,7 +106,7 @@ const Home = () => {
                             </Text>
 
                             <Button
-                                onClick={() => navigate("/notes")}                                
+                                onClick={() => navigate("/notes")}
                             >
                                 Add note
                             </Button>
@@ -121,10 +121,15 @@ const Home = () => {
                                         <Text style={{ fontSize: "10px" }} className='text-right px-2'>
                                             {note.dateCreated}
                                         </Text>
-                                        <div className='pt-2 border-b border-sidebar'></div>
-                                        <Text style={{ wordWrap: "break-word" }} className='p-2 text-xs'>
-                                            {note.notes.length >= 257 ? note.notes.substring(0, 257) + " . . ." : note.notes}
-                                        </Text>
+                                        <div className='pt-2 border-b border-sidebar'></div>                                       
+
+                                        {note.notes.length >= 257 ? <div
+                                            style={{ wordWrap: "break-word" }} className='p-2 text-xs'
+                                            dangerouslySetInnerHTML={{ __html: note.notes.substring(0, 257) + " . . ." }}
+                                        /> : <div
+                                            style={{ wordWrap: "break-word" }} className='p-2 text-xs'
+                                            dangerouslySetInnerHTML={{ __html: note.notes }}
+                                        />}
 
                                         <div>
 

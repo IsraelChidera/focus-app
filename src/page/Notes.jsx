@@ -235,16 +235,15 @@ const Notes = () => {
               <p style={{ fontSize: "10px" }} className='text-right px-2'>
                 {note.dateCreated}
               </p>
-              <div className='pt-2 border-b border-sidebar'></div>
-              <p style={{ wordWrap: "break-word" }} className='p-2 text-xs'>
-                {note.notes.length >= 257 ? note.notes.substring(0, 257) + " . . ." : note.notes}
-              </p>
+              <div className='pt-2 border-b border-sidebar'></div>             
 
-              {note.notes.length >= 257 ?  note.notes.substring(0, 257) + " . . ." : note.notes}
-
-              <div
-                dangerouslySetInnerHTML={{ __html: note.notes }} 
-              />
+              {note.notes.length >= 257 ? <div
+                style={{ wordWrap: "break-word" }} className='p-2 text-xs'
+                dangerouslySetInnerHTML={{ __html: note.notes.substring(0, 257) + " . . ." }}
+              /> : <div
+                style={{ wordWrap: "break-word" }} className='p-2 text-xs'
+                dangerouslySetInnerHTML={{ __html: note.notes }}
+              />}
 
               <div>
 
