@@ -19,6 +19,9 @@ import { NavLink } from 'react-router-dom';
 import moment from 'moment/moment';
 
 
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+
 const Notes = () => {
 
   const [openSearchNotes, setOpenSearchNotes] = useState(false);
@@ -64,7 +67,7 @@ const Notes = () => {
   }
 
   const fetchData = async () => {
-    try {      
+    try {
       // setLoading(true);
       const q = query(collection(db, "notes"), where("uid", "==", user));
       const querySnapshot = await getDocs(q);
@@ -96,7 +99,7 @@ const Notes = () => {
   useEffect(() => {
     fetchData();
   }, [user, notes])
-  
+
 
   return (
     <section className="text-white mt-10 mb-20">
@@ -113,55 +116,55 @@ const Notes = () => {
 
       <div className='bg-sidebar'>
 
-        <div className='bg-tertiary border-b px-4 py-2 flex justify-between items-center'>
+        <div className='bg-sidebar px-4 py-2 flex justify-between items-center'>
 
-          <BsPlusLg className='text-sidebar' />
+          <BsPlusLg className='text-white' />
 
-          <FiSearch className='text-sidebar' onClick={handleOpenSearchTab} />
+          <FiSearch className='text-white' onClick={handleOpenSearchTab} />
 
         </div>
-        <div className='p-3 bg-tertiary flex items-center justify-between' style={{ borderBottom: "1px solid #E0E0E0" }}>
-          <button>
+        <div className='p-3 bg-secondary flex items-center justify-between' style={{ borderBottom: "1px solid #E0E0E0" }}>
+          <button style={{ width: "10px", height: "10px" }}>
             <img src={editOption1} alt="edit options" />
           </button>
 
-          <button>
+          <button style={{ width: "10px", height: "10px" }}>
             <img src={editOption2} alt="edit options" />
           </button>
 
-          <button>
+          <button style={{ width: "10px", height: "10px" }}>
             <img src={editOption3} alt="edit options" />
           </button>
 
-          <button>
+          <button style={{ width: "10px", height: "10px" }}>
             <img src={editOption4} alt="edit options" />
           </button>
 
-          <button>
+          <button style={{ width: "10px", height: "10px" }}>
             <img src={editOption5} alt="edit options" />
           </button>
 
-          <button>
+          <button style={{ width: "10px", height: "10px" }}>
             <img src={editOption6} alt="edit options" />
           </button>
 
-          <button>
+          <button style={{ width: "10px", height: "10px" }}>
             <img src={editOption7} alt="edit options" />
           </button>
 
-          <button>
+          <button style={{ width: "10px", height: "10px" }}>
             <img src={editOption8} alt="edit options" />
           </button>
 
-          <button>
+          <button style={{ width: "10px", height: "10px" }}>
             <img src={editOption9} alt="edit options" />
           </button>
 
-          <button>
+          <button style={{ width: "10px", height: "10px" }}>
             <img src={editOption10} alt="edit options" />
           </button>
 
-          <button>
+          <button style={{ width: "15px", height: "15px" }}>
             <img src={editOption11} alt="edit options" />
           </button>
 
@@ -170,7 +173,32 @@ const Notes = () => {
         <div>
           {error && <p style={{ color: "red" }} className='text-red-600 text-sm'>{error}</p>}
           <form>
-            <div>
+
+            <div >
+              <CKEditor
+                editor={ClassicEditor}
+                // data="<p>Hello from CKEditor&nbsp;5!</p>"
+                className='w-full bg-sidebar text-sm'
+                onReady={editor => {
+                  // You can store the "editor" and use when it is needed.
+                  console.log('Editor is ready to use!', editor);
+                }}
+                onChange={(event, editor) => {
+                  const data = editor.getData();
+                  console.log({ event, editor, data });
+                  setNotes(data);
+                }}
+                // onChange={(e) => setNotes(e.target.value)}
+                onBlur={(event, editor) => {
+                  // console.log('Blur.', editor);
+                }}
+                onFocus={(event, editor) => {
+                  // console.log('Focus.', editor);
+                }}
+              />
+            </div>
+
+            {/* <div>
               <textarea
                 className='w-full bg-sidebar text-sm' rows="6"
                 placeholder='. . . what is on your mind?'
@@ -180,7 +208,7 @@ const Notes = () => {
                 onChange={(e) => setNotes(e.target.value)}
               >
               </textarea>
-            </div>
+            </div> */}
           </form>
         </div>
       </div>
@@ -199,6 +227,7 @@ const Notes = () => {
             </p>
           </div>
         }
+
         {
           data.map((note) => (
 
@@ -207,9 +236,15 @@ const Notes = () => {
                 {note.dateCreated}
               </p>
               <div className='pt-2 border-b border-sidebar'></div>
-              <p style={{wordWrap: "break-word"}} className='p-2 text-xs'>
-                {note.notes.length>=257? note.notes.substring(0,257) + " . . ." : note.notes }
+              <p style={{ wordWrap: "break-word" }} className='p-2 text-xs'>
+                {note.notes.length >= 257 ? note.notes.substring(0, 257) + " . . ." : note.notes}
               </p>
+
+              {note.notes.length >= 257 ?  note.notes.substring(0, 257) + " . . ." : note.notes}
+
+              <div
+                dangerouslySetInnerHTML={{ __html: note.notes }} 
+              />
 
               <div>
 

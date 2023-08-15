@@ -14,7 +14,7 @@ const Pomodoro = () => {
     const formatTime = seconds => {
         const mins = Math.floor(seconds / 60);
         const secs = seconds % 60;
-        return `${mins.toString().padStart(2, '0')} : ${secs.toString().padStart(2, '0')}`;
+        return `${mins.toString().padStart(2, '0')}m : ${secs.toString().padStart(2, '0')}s`;
     };
 
     const toggleTimer = () => {
@@ -71,34 +71,25 @@ const Pomodoro = () => {
                             <span className="text-4xl font-semibold">
                                 {formatTime(timer)}
                             </span>
-                            <span className="text-xs pt-2">
-                                mins
-                            </span>
                         </div>
 
-                        <div className='flex flex-col justify-between'>
-                            <span>
-                                ^
-                            </span>
-                            <span>
-                                v
-                            </span>
-                        </div>
                     </div>
                 </div>
             </div>
 
-            <Text className="text-sm mt-6">                
-                {timerLabel === 'Work' && <span>It's time to get focused</span>}
+
+
+            <Text className="text-sm mt-6">
+                {timerLabel === 'Work' && <span>It's time work</span>}
                 {timerLabel === 'Break' && <span>Time to take some rest</span>}
-            </Text>
+            </Text>           
 
             <div className='flex flex-col'>
-                <Button onClick={toggleTimer} className="mt-6">
+                <Button onClick={toggleTimer} className="mt-6 w-auto px-10 mx-auto">
                     {isRunning ? "Pause session" : "Start session"}
                 </Button>
 
-                <Button onClick={resetTimer} className="mt-6">
+                <Button onClick={resetTimer} className="mt-6 w-auto mx-auto">
                     Reset
                 </Button>
             </div>

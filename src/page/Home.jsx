@@ -77,58 +77,8 @@ const Home = () => {
     return (
         <section className="text-white pt-10 pb-20">
 
-            <section className="grid grid-cols-2 gap-4">
-                <Pomodoro />
-
-                <Card className="py-4">
-                    <div className='hidden'>
-                        <p>
-                            {remainingTime.days} days
-                        </p>
-                        <p>
-                            {remainingTime.hours} hours
-                        </p>
-                        <p>
-                            {remainingTime.minutes} minutes
-                        </p>
-                        <p>
-                            {remainingTime.seconds} seconds
-                        </p>
-                    </div>
-
-                    <div>
-                        <div className="flex justify-between">
-                            <Text className="text-sm font-semibold">
-                                Daily progress
-                            </Text>
-
-                            <Button
-                                onClick={handleSettings}
-                                className="py-1 px-6"
-                            >
-                                Settings
-                            </Button>
-                        </div>
-
-                        {open ? <Settings
-                            setOpen={setOpen}
-                            workMin={workMin}
-                            breakMin={breakMin}
-                            setWorkMin={setWorkMin}
-                            setBreakMin={setBreakMin}
-                        />
-                            :
-                            <Time
-                                workMin={workMin}
-                                breakMin={breakMin}
-                                setWorkMin={setWorkMin}
-                                setBreakMin={setBreakMin}
-                            />
-                        }
-
-                    </div>
-                </Card>
-
+            <section className="grid grid-cols-1 gap-4">
+                <Pomodoro />                
 
                 {/* notes */}
                 <Card className="py-4 col-span-2">
@@ -155,12 +105,11 @@ const Home = () => {
                                 Add notes while on your focus sessions
                             </Text>
 
-                            <button
-                                onClick={() => navigate("/notes")}
-                                className="rounded-lg text-xs py-1.5 px-8 text-white bg-secondary"
+                            <Button
+                                onClick={() => navigate("/notes")}                                
                             >
                                 Add note
-                            </button>
+                            </Button>
                         </div>
                     </section>
 

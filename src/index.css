@@ -15,12 +15,14 @@
     height: 200px;   
 }
 
-
-
 html {
   scroll-behavior: smooth;
 }
 
 body {
   background: #1e272e;
+}
+
+.ck.ck-editor__main {
+    color: #334;    
 }
