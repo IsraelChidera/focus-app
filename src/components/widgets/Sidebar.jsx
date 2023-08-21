@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom';
 
 const Sidebar = () => {
     return (
-        <aside className="text-white hidden">
+        <aside className="text-white md:block hidden">
             <ul>
                 <Text className="md:block hidden text-2xl pl-4 mt-6 font-bold mb-12">
                     Focus<span className="text-tertiary">Vest</span>

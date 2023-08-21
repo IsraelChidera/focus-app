@@ -10,17 +10,18 @@ import { Routes, Route } from 'react-router-dom';
 import Layout from './components/widgets/Layout';
 import { BrowserRouter as Router } from 'react-router-dom';
 import NoteDetail from './page/NoteDetail';
+import ProtectedRoute from './components/widgets/ProtectedRoute';
 
 
 function App() {
-
+const user = '';
   return (
     <Router>
       <div className="App bg-primary">
         <section>
           <div>
             <Routes>
-              <Route element={<Layout />}>
+              <Route element={<ProtectedRoute user={user} />}>
                 <Route
                   path="/home"
                   element={
@@ -39,20 +40,7 @@ function App() {
                     < Notes />
                   }
                 />
-
-                {/* <Route
-                  path="/timer"
-                  element={
-                    < Timer />
-                  }
-                />
-
-                <Route
-                  path="/stopwatch"
-                  element={
-                    < Stopwatch />
-                  }
-                /> */}
+                
               </Route>
 
               <Route path="/" element={<Signup />} />
