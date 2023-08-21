@@ -75,9 +75,9 @@ const Home = () => {
 
 
     return (
-        <section className="text-white pt-10 pb-20">
+        <section className="text-white pt-10 pb-24 px-3  md:pt-10 md:pb-20">
 
-            <section className="grid grid-cols-1 gap-4">
+            <section className="grid grid-cols-1 space-y-6 md:space-y-0 md:gap-4">
                 <Pomodoro />
 
                 {/* notes */}

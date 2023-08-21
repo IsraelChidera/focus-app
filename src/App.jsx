@@ -5,8 +5,6 @@ import Home from './page/Home';
 import Notes from './page/Notes';
 import Signup from './page/Signup';
 import Login from './page/Login';
-import Timer from './page/Timer';
-import Stopwatch from './page/Stopwatch';
 import { Routes, Route } from 'react-router-dom';
 // import Navbar from './components/widgets/Navbar';
 import Layout from './components/widgets/Layout';
@@ -32,7 +30,6 @@ function App() {
 
                 <Route
                   path="/notes/:id"
-
                   element={<NoteDetail />}
                 />
 
@@ -43,7 +40,7 @@ function App() {
                   }
                 />
 
-                <Route
+                {/* <Route
                   path="/timer"
                   element={
                     < Timer />
@@ -55,7 +52,7 @@ function App() {
                   element={
                     < Stopwatch />
                   }
-                />
+                /> */}
               </Route>
 
               <Route path="/" element={<Signup />} />

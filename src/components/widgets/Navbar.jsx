@@ -23,7 +23,7 @@ const Navbar = () => {
     
     return(
         <>
-            <nav className="flex justify-between pt-8">
+            <nav className="flex justify-between px-3 pt-8">
                 <Text className="text-white font-bold text-xl">
                     Welcome, <span className="italic"> Name </span>
                 </Text>

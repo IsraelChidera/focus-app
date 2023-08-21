@@ -5,12 +5,12 @@ import Sidebar from './Sidebar';
 const Layout = ({ children }) => {
     return (
         <section className="relative">
-            <div className="fixed top-0 left-0 h-screen bg-sidebar w-72">
+            <div className="fixed top-0 left-0 h-screen bg-sidebar md:w-72">
                 < Sidebar />
             </div>
 
 
-            <div className="pl-80 pr-4">
+            <div className="md:pl-80 md:pr-4">
                 <Navbar />
                 <Outlet />
             </div>

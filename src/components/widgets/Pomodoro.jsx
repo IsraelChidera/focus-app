@@ -62,7 +62,7 @@ const Pomodoro = () => {
             <Text className="text-sm pt-2">
                 Achieve your daily goals and get more
                 done using the Pomodoro Technique
-            </Text>
+            </Text>            
 
             <div className="flex justify-center items-center mt-8">
                 <div className="py-2 px-4 rounded-md border-b border-x-0 border-x-white border-t-0 border-t-white border-white ">
@@ -82,7 +82,7 @@ const Pomodoro = () => {
             <Text className="text-sm mt-6">
                 {timerLabel === 'Work' && <span>It's time work</span>}
                 {timerLabel === 'Break' && <span>Time to take some rest</span>}
-            </Text>           
+            </Text>
 
             <div className='flex flex-col'>
                 <Button onClick={toggleTimer} className="mt-6 w-auto px-10 mx-auto">
