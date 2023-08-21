@@ -4,8 +4,8 @@ import Text from '../elements/Text';
 import Button from '../elements/Button';
 
 const Pomodoro = () => {
-    const [workTime, setWorkTime] = useState(1);
-    const [restTime, setRestTime] = useState(2);
+    const [workTime, setWorkTime] = useState(25);
+    const [restTime, setRestTime] = useState(5);
     const [isRunning, setIsRunning] = useState(false);
     const [timerLabel, setTimerLabel] = useState('Work');
     const [timer, setTimer] = useState(workTime * 60);
