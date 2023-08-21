@@ -230,7 +230,6 @@ const Signup = () => {
                                 </NavLink>
                             </p>
                         </div>
-
                     </div>
 
                     <div className='bg-sidebar text-secondary h-screen'></div>

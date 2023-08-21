@@ -11,10 +11,21 @@ import Layout from './components/widgets/Layout';
 import { BrowserRouter as Router } from 'react-router-dom';
 import NoteDetail from './page/NoteDetail';
 import ProtectedRoute from './components/widgets/ProtectedRoute';
+import { useDispatch, useSelector } from 'react-redux';
+import { getCurrentUser } from './store/features/userSlice';
 
 
 function App() {
-const user = '';
+
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user.value);
+  console.log(user);
+
+  useEffect(() => {
+    dispatch(getCurrentUser());
+  }, [dispatch])
+
+
   return (
     <Router>
       <div className="App bg-primary">
@@ -40,7 +51,7 @@ const user = '';
                     < Notes />
                   }
                 />
-                
+
               </Route>
 
               <Route path="/" element={<Signup />} />

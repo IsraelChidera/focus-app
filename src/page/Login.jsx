@@ -10,7 +10,7 @@ const Login = () => {
     const [errors, setErrors] = useState('');
     const [loading, setLoading] = useState(false);
 
-    const initialValues = {        
+    const initialValues = {
         email: "",
         password: "",
     }
@@ -59,107 +59,111 @@ const Login = () => {
         <>
             <main >
                 <section>
-                    <div className="flex h-screen items-center justify-center px-4 sm:px-6 lg:px-8">
-                        <div className="w-full max-w-md space-y-8">
-                            <div>
-                                <Text className="text-4xl text-white text-center font-bold mb-2">
-                                    Focus<span className="text-tertiary">App</span>
-                                </Text>
+                    <div className="grid grid-cols-2 h-screen ">
+                        <div className='flex md:w-3/5 mx-auto flex-col justify-center h-screen'>
+                            <div className=" ">
+                                <div>
+                                    <Text className="text-2xl text-white text-center font-bold mb-2">
+                                        Focus<span className="text-tertiary">App</span>
+                                    </Text>
 
-                                <h2 className="text-white text-center text-base  tracking-tight text-gray-900">
-                                    Welcome Back
-                                </h2>
-                            </div>
+                                    <h2 className="text-white text-center md:text-sm text-xs tracking-tight text-gray-900">
+                                        Welcome Back
+                                    </h2>
+                                </div>
 
-                            <div className='mt-4 text-xs' style={{ color: "red" }}>
-                                {errors && errors}
-                            </div>
+                                <div className='mt-4 text-xs' style={{ color: "red" }}>
+                                    {errors && errors}
+                                </div>
 
-                            <div>
-                                <Formik
-                                    initialValues={initialValues}
-                                    validate={validateForm}
-                                    onSubmit={(values) => onLogin(values)}
-                                >
-                                    {
-                                        ({
-                                            values,
-                                            errors,
-                                            touched,
-                                            handleChange,
-                                            handleBlur,
-                                            handleSubmit,
-                                            isSubmitting
-                                        }) => (
-                                            <Form className="mt-8 space-y-6" >
-                                                <div className=" space-y-6 rounded-md shadow-sm">
+                                <div>
+                                    <Formik
+                                        initialValues={initialValues}
+                                        validate={validateForm}
+                                        onSubmit={(values) => onLogin(values)}
+                                    >
+                                        {
+                                            ({
+                                                values,
+                                                errors,
+                                                touched,
+                                                handleChange,
+                                                handleBlur,
+                                                handleSubmit,
+                                                isSubmitting
+                                            }) => (
+                                                <Form className="mt-8 space-y-6" >
+                                                    <div className=" space-y-6 rounded-md shadow-sm">
 
 
-                                                    <div>
-                                                        <label htmlFor="email-address" className="sr-only">
-                                                            Email address
-                                                        </label>
-                                                        <Field
-                                                            type="email"
-                                                            id="email"
-                                                            name="email"
-                                                            value={values.email}
-                                                            onChange={handleChange}
-                                                            className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                                                            placeholder="Email address"
-                                                        />
+                                                        <div>
+                                                            <label htmlFor="email-address" className="sr-only">
+                                                                Email address
+                                                            </label>
+                                                            <Field
+                                                                type="email"
+                                                                id="email"
+                                                                name="email"
+                                                                value={values.email}
+                                                                onChange={handleChange}
+                                                                className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                                                                placeholder="Email address"
+                                                            />
 
-                                                        <p className='text-xs' style={{ color: 'red' }}>
-                                                            {errors.email && touched.email && errors.email}
-                                                        </p>
+                                                            <p className='text-xs' style={{ color: 'red' }}>
+                                                                {errors.email && touched.email && errors.email}
+                                                            </p>
+                                                        </div>
+
+                                                        <div>
+                                                            <label htmlFor="password" className="sr-only">
+                                                                Password
+                                                            </label>
+                                                            <Field
+                                                                type="password"
+                                                                id="password"
+                                                                name="password"
+                                                                value={values.password}
+                                                                onChange={handleChange}
+                                                                className="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                                                                placeholder="Password"
+                                                            />
+
+                                                            <p className='text-xs' style={{ color: 'red' }}>
+                                                                {errors.password && touched.password && errors.password}
+                                                            </p>
+                                                        </div>
                                                     </div>
 
                                                     <div>
-                                                        <label htmlFor="password" className="sr-only">
-                                                            Password
-                                                        </label>
-                                                        <Field
-                                                            type="password"
-                                                            id="password"
-                                                            name="password"
-                                                            value={values.password}
-                                                            onChange={handleChange}
-                                                            className="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                                                            placeholder="Password"
-                                                        />
-
-                                                        <p className='text-xs' style={{ color: 'red' }}>
-                                                            {errors.password && touched.password && errors.password}
-                                                        </p>
+                                                        <button
+                                                            type="submit"
+                                                            className="group relative flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                                        >
+                                                            <span>
+                                                                {loading ? "Logging in ..." : " Login "}
+                                                            </span>
+                                                        </button>
                                                     </div>
-                                                </div>
 
-                                                <div>
-                                                    <button
-                                                        type="submit"
-                                                        className="group relative flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                                                    >
-                                                        <span>
-                                                            {loading ? "Logging in ..." : " Login "}
-                                                        </span>
-                                                    </button>
-                                                </div>
+                                                </Form>
+                                            )
+                                        }
+                                    </Formik>
+                                </div>
 
-                                            </Form>
-                                        )
-                                    }
-                                </Formik>
                             </div>
 
-
-                            <p className="text-sm text-white text-center">
+                            <p className="text-sm mt-10 text-white text-center">
                                 No account yet?{' '}
                                 <NavLink to="/" className="underline text-tertiary">
                                     Sign up
                                 </NavLink>
                             </p>
-
                         </div>
+
+
+                        <div className='bg-sidebar text-secondary h-screen'></div>
                     </div>
                 </section>
             </main>
