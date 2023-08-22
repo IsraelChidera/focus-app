@@ -1,17 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { BsPlusLg } from 'react-icons/bs';
 import { FiSearch } from 'react-icons/fi';
-import editOption1 from '../components/assets/bold-icon.svg';
-import editOption2 from '../components/assets/italics-icon.svg';
-import editOption3 from '../components/assets/underline-icon.svg';
-import editOption4 from '../components/assets/quote-icon.svg';
-import editOption5 from '../components/assets/cross-icon.svg';
-import editOption6 from '../components/assets/justify-icon.svg';
-import editOption7 from '../components/assets/justify-icon-1.svg';
-import editOption8 from '../components/assets/justify-icon-2.svg';
-import editOption9 from '../components/assets/justify-icon-3.svg';
-import editOption10 from '../components/assets/add-image-icon.svg';
-import editOption11 from '../components/assets/add-link-icon.svg';
 import { collection, query, where, addDoc, getDocs } from "firebase/firestore";
 import { db, auth } from '../firebase';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -44,21 +33,16 @@ const Notes = () => {
     setLoading(true);
 
     try {
-      const docRef = await addDoc(collection(db, "notes"), {
+      await addDoc(collection(db, "notes"), {
         notes: notes,
         uid: user,
         dateCreated: moment().format("MMM Do YY")
-      })
+      });
 
       setLoading(false);
       setError("");
       setNotes("");
-
-      // if (docRef.id.length > 0) {
-      //   setLoading(false);
-      //   setError("");
-      //   setNotes("");
-      // }
+      
     } catch (error) {
       console.error("Error adding document:", error);
       setError("Error adding the note.");
@@ -67,8 +51,7 @@ const Notes = () => {
   }
 
   const fetchData = async () => {
-    try {
-      // setLoading(true);
+    try {    
       const q = query(collection(db, "notes"), where("uid", "==", user));
       const querySnapshot = await getDocs(q);
       const fetchedData = [];
@@ -102,7 +85,7 @@ const Notes = () => {
 
 
   return (
-    <section className="text-white mt-10 mb-20">
+    <section className="text-white mt-10 mb-20 px-3 md:px-0">
       {
         openSearchNotes && <form className='mb-6 w-full relative'>
           <input
@@ -123,52 +106,7 @@ const Notes = () => {
           <FiSearch className='text-white' onClick={handleOpenSearchTab} />
 
         </div>
-        <div className='p-3 bg-secondary flex items-center justify-between' style={{ borderBottom: "1px solid #E0E0E0" }}>
-          <button style={{ width: "10px", height: "10px" }}>
-            <img src={editOption1} alt="edit options" />
-          </button>
-
-          <button style={{ width: "10px", height: "10px" }}>
-            <img src={editOption2} alt="edit options" />
-          </button>
-
-          <button style={{ width: "10px", height: "10px" }}>
-            <img src={editOption3} alt="edit options" />
-          </button>
-
-          <button style={{ width: "10px", height: "10px" }}>
-            <img src={editOption4} alt="edit options" />
-          </button>
-
-          <button style={{ width: "10px", height: "10px" }}>
-            <img src={editOption5} alt="edit options" />
-          </button>
-
-          <button style={{ width: "10px", height: "10px" }}>
-            <img src={editOption6} alt="edit options" />
-          </button>
-
-          <button style={{ width: "10px", height: "10px" }}>
-            <img src={editOption7} alt="edit options" />
-          </button>
-
-          <button style={{ width: "10px", height: "10px" }}>
-            <img src={editOption8} alt="edit options" />
-          </button>
-
-          <button style={{ width: "10px", height: "10px" }}>
-            <img src={editOption9} alt="edit options" />
-          </button>
-
-          <button style={{ width: "10px", height: "10px" }}>
-            <img src={editOption10} alt="edit options" />
-          </button>
-
-          <button style={{ width: "15px", height: "15px" }}>
-            <img src={editOption11} alt="edit options" />
-          </button>
-
-        </div>
+        
 
         <div>
           {error && <p style={{ color: "red" }} className='text-red-600 text-sm'>{error}</p>}
@@ -187,34 +125,24 @@ const Notes = () => {
                   const data = editor.getData();
                   console.log({ event, editor, data });
                   setNotes(data);
+                }}                
+                onBlur={(event, editor) => {                  
                 }}
-                // onChange={(e) => setNotes(e.target.value)}
-                onBlur={(event, editor) => {
-                  // console.log('Blur.', editor);
-                }}
-                onFocus={(event, editor) => {
-                  // console.log('Focus.', editor);
+                onFocus={(event, editor) => {                  
                 }}
               />
             </div>
-
-            {/* <div>
-              <textarea
-                className='w-full bg-sidebar text-sm' rows="6"
-                placeholder='. . . what is on your mind?'
-                name="notes"
-                id="note"
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-              >
-              </textarea>
-            </div> */}
+           
           </form>
         </div>
       </div>
 
       <div className='flex justify-end py-2'>
-        <button type="submit" onClick={handleAddNotesToDb} className="px-6 py-2 text-xs text-white bg-sidebar">
+        <button 
+          type="submit" 
+          onClick={handleAddNotesToDb} 
+          className="px-6 py-2 text-xs text-white bg-sidebar"
+        >
           {loading ? "Adding note . . ." : "Add note"}
         </button>
       </div>
@@ -230,7 +158,6 @@ const Notes = () => {
 
         {
           data.map((note) => (
-
             <NavLink to={`/notes/${note.id}`} className='relative todo-weekly rounded-lg shadow-md' key={note.id}>
               <p style={{ fontSize: "10px" }} className='text-right px-2'>
                 {note.dateCreated}
@@ -249,7 +176,6 @@ const Notes = () => {
 
               </div>
             </NavLink>
-
           ))
         }
 

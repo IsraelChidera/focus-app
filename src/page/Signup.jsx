@@ -232,10 +232,17 @@ const Signup = () => {
                         </div>
                     </div>
 
-                    <div className='bg-sidebar text-secondary h-screen'></div>
+                    <div className='bg-sidebar h-screen'>
+                        <div className='flex items-center justify-center h-screen'>
+                            {/* <p className='text-5xl text-center'>
+                                “Creativity is intelligence having fun”
+                            </p> */}
+                        </div>
+                    </div>
                 </div>
             </section>
         </main>
+
     )
 }
 

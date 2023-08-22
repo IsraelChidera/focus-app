@@ -77,7 +77,7 @@ const NoteDetail = () => {
         )
     }
     return (
-        <div className='mt-10 text-white'>
+        <div className='mt-10 text-white px-3 md:px-0'>
             <h3 className='pb-1'>Note detail</h3>
             <div className='flex justify-between items-center border-t border-secondary pt-2 text-right text-xs'>
                 <p className='text-lg '><BiArrowBack onClick={() => navigate(-1)} /></p>

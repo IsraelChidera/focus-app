@@ -19,6 +19,7 @@ function App() {
 
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.value);
+  // const user = "asasa";
   console.log(user);
 
   useEffect(() => {
