@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { BsPlusLg } from 'react-icons/bs';
 import { FiSearch } from 'react-icons/fi';
 import { collection, query, where, addDoc, getDocs } from "firebase/firestore";
@@ -15,7 +15,7 @@ const Notes = () => {
 
   const [openSearchNotes, setOpenSearchNotes] = useState(false);
   const [notes, setNotes] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [user, setUser] = useState("");
   const [data, setData] = useState([]);
@@ -30,19 +30,21 @@ const Notes = () => {
       return;
     }
 
+
     setLoading(true);
 
     try {
-      await addDoc(collection(db, "notes"), {
+      const docRef = await addDoc(collection(db, "notes"), {
         notes: notes,
         uid: user,
         dateCreated: moment().format("MMM Do YY")
       });
 
       setLoading(false);
-      setError("");
       setNotes("");
-      
+
+     
+
     } catch (error) {
       console.error("Error adding document:", error);
       setError("Error adding the note.");
@@ -51,7 +53,7 @@ const Notes = () => {
   }
 
   const fetchData = async () => {
-    try {    
+    try {
       const q = query(collection(db, "notes"), where("uid", "==", user));
       const querySnapshot = await getDocs(q);
       const fetchedData = [];
@@ -106,7 +108,7 @@ const Notes = () => {
           <FiSearch className='text-white' onClick={handleOpenSearchTab} />
 
         </div>
-        
+
 
         <div>
           {error && <p style={{ color: "red" }} className='text-red-600 text-sm'>{error}</p>}
@@ -115,7 +117,7 @@ const Notes = () => {
             <div >
               <CKEditor
                 editor={ClassicEditor}
-                // data="<p>Hello from CKEditor&nbsp;5!</p>"
+                data={notes}
                 className='w-full bg-sidebar text-sm'
                 onReady={editor => {
                   // You can store the "editor" and use when it is needed.
@@ -123,31 +125,30 @@ const Notes = () => {
                 }}
                 onChange={(event, editor) => {
                   const data = editor.getData();
-                  console.log({ event, editor, data });
                   setNotes(data);
-                }}                
-                onBlur={(event, editor) => {                  
                 }}
-                onFocus={(event, editor) => {                  
+                onBlur={(event, editor) => {
+                }}
+                onFocus={(event, editor) => {
                 }}
               />
             </div>
-           
+
           </form>
         </div>
       </div>
 
       <div className='flex justify-end py-2'>
-        <button 
-          type="submit" 
-          onClick={handleAddNotesToDb} 
+        <button
+          type="submit"
+          onClick={handleAddNotesToDb}
           className="px-6 py-2 text-xs text-white bg-sidebar"
         >
           {loading ? "Adding note . . ." : "Add note"}
         </button>
       </div>
 
-      <div className='mt-16 grid md:grid-cols-4 grid-cols-2 gap-x-4 gap-y-6 '>
+      <div className='mt-16 grid grid-container gap-x-4 gap-y-6 '>
         {
           data.length == 0 && <div>
             <p>
@@ -162,7 +163,7 @@ const Notes = () => {
               <p style={{ fontSize: "10px" }} className='text-right px-2'>
                 {note.dateCreated}
               </p>
-              <div className='pt-2 border-b border-sidebar'></div>             
+              <div className='pt-2 border-b border-sidebar'></div>
 
               {note.notes.length >= 257 ? <div
                 style={{ wordWrap: "break-word" }} className='p-2 text-xs'

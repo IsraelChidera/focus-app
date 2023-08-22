@@ -7,6 +7,9 @@ import { AiFillDelete } from 'react-icons/ai';
 import { BsPencilSquare } from 'react-icons/bs';
 import { BiArrowBack } from 'react-icons/bi';
 
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+
 
 const NoteDetail = () => {
     const { id } = useParams();
@@ -17,6 +20,8 @@ const NoteDetail = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [user, setUser] = useState("");
+    const [open, setOpen] = useState(false);
+    const [notes, setNotes] = useState();
 
     const fetchData = async () => {
         try {
@@ -61,9 +66,24 @@ const NoteDetail = () => {
 
     useEffect(() => {
         fetchData();
-    }, [user])
+    }, [user, notes])
 
-    console.log(note);
+
+    const onEdit = () => {
+        setOpen(prev => !prev)
+    }
+
+    const onUpdateNotes = async () => {
+        setOpen(prev => !prev);
+
+        const updateRef = doc(db, "notes", note.id);
+        
+        await updateDoc(updateRef, {
+            notes : notes
+        })
+
+        navigate("/notes");
+    }
 
     if (!note) {
         return (
@@ -76,27 +96,66 @@ const NoteDetail = () => {
             </div>
         )
     }
+
     return (
-        <div className='mt-10 text-white px-3 md:px-0'>
-            <h3 className='pb-1'>Note detail</h3>
-            <div className='flex justify-between items-center border-t border-secondary pt-2 text-right text-xs'>
-                <p className='text-lg '><BiArrowBack onClick={() => navigate(-1)} /></p>
-                <p style={{ fontSize: "12px" }} >
-                    {note.dateCreated}
-                </p>
-            </div>
-            <div className='text-sm mt-8'>               
-                <div
-                    dangerouslySetInnerHTML={{ __html: note.notes }}
-                />
-            </div>
+        <>
+            {
+                open ? <>
+                    <form className='mt-10'>
 
-            <div className='flex justify-center space-x-4 text-lg mt-20'>
-                <BsPencilSquare className='cursor-pointer' />
-                <AiFillDelete className='cursor-pointer' onClick={handleDeleteNote} />
+                        <div >
+                            <CKEditor
+                                editor={ClassicEditor}
+                                data={note.notes}
+                                className='w-full bg-sidebar text-sm'
+                                onReady={editor => {
+                                    // You can store the "editor" and use when it is needed.                                    
+                                }}
+                                onChange={(event, editor) => {
+                                    const data = editor.getData();
+                                    // console.log({ event, editor, data });
+                                    setNotes(data);
+                                }}
+                                onBlur={(event, editor) => {
+                                }}
+                                onFocus={(event, editor) => {
+                                }}
+                            />
+                        </div>
 
-            </div>
-        </div>
+                        <div className='flex justify-end'>
+                            <button className='px-6 py-2 text-xs text-white bg-sidebar mt-4' onClick={onUpdateNotes}>
+                                Update
+                            </button>
+                        </div>
+
+                    </form>
+                </> : <>
+                    <div className='mt-10 text-white px-3 md:px-0'>
+                        <h3 className='pb-1'>Note detail</h3>
+                        <div className='flex justify-between items-center border-t border-secondary pt-2 text-right text-xs'>
+                            <p className='text-lg '><BiArrowBack className='cursor-pointer' onClick={() => navigate(-1)} /></p>
+                            <p style={{ fontSize: "12px" }} >
+                                {note.dateCreated}
+                            </p>
+                        </div>
+                        <div className='text-sm mt-8'>
+                            <div
+                                dangerouslySetInnerHTML={{ __html: note.notes }}
+                            />
+                        </div>
+
+                        <div className='flex justify-center space-x-4 text-lg mt-20'>
+                            <BsPencilSquare onClick={onEdit} className='cursor-pointer' />
+                            <AiFillDelete className='cursor-pointer' onClick={handleDeleteNote} />
+
+                        </div>
+                    </div>
+                </>
+            }
+
+
+        </>
     )
 }
 

@@ -39,8 +39,8 @@ const Navbar = () => {
                     {/* <BsPencilSquare  /> */}
                     <BsPersonCircle onClick={handleOpenNavbar} className='cursor-pointer text-white'/>
                     {
-                        open && <div className='absolute top-5 right-0 flex justify-end border border-white bg-sidebar z-40'>
-                            <div className='flex flex-col px-12 py-6 space-y-6'>
+                        open && <div className='absolute top-5 right-0 flex justify-end border border-slate-500 bg-sidebar z-40'>
+                            <div className='flex flex-col text-right justify-right pl-20 pr-2 py-4 space-y-4'>
                                 <button className="text-right text-xs text-white underline">
                                     View Profile
                                 </button>

@@ -49,11 +49,11 @@ const Home = () => {
                 // https://firebase.google.com/docs/reference/js/firebase.User
                 const uid = user.uid;
                 // ...
-                console.log("uid", uid)
+                // console.log("uid", uid)
             } else {
                 // User is signed out
                 // ...
-                console.log("user is logged out")
+                // console.log("user is logged out")
             }
         });
 
@@ -67,7 +67,7 @@ const Home = () => {
     useEffect(() => {
         dispatch(getCurrentUser());
     }, [dispatch])
-    console.log("user here: ", user);
+    // console.log("user here: ", user);
 
     useEffect(() => {
         dispatch(notesFetch(user))
@@ -114,7 +114,7 @@ const Home = () => {
                     </section>
 
                     <div className='mt-20'>
-                        <div className='grid grid-cols-4 gap-y-10 gap-x-4 w-full'>
+                        <div className='grid grid-container gap-x-4 gap-y-6 w-full'>
                             {
                                 value.slice(0, 4).map((note) => (
                                     <div className='relative todo-weekly rounded-lg shadow-md' key={note.id}>

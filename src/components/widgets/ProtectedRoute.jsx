@@ -9,12 +9,12 @@ const ProtectedRoute = ({ user, children }) => {
     }
     return children ? children : (
         <section className="relative">
-            <div className="fixed top-0 left-0 h-screen bg-sidebar md:w-72">
+            <div className="fixed top-0 left-0 h-screen bg-sidebar sidebar-width">
                 < Sidebar />
             </div>
 
 
-            <div className="md:pl-80 md:pr-4">
+            <div className="main-width md:pr-4">
                 <Navbar />
                 <Outlet />
             </div>
