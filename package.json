@@ -5,6 +5,10 @@
   "dependencies": {
     "@ckeditor/ckeditor5-build-classic": "^39.0.1",
     "@ckeditor/ckeditor5-react": "^6.1.0",
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@mui/icons-material": "^5.14.3",
+    "@mui/material": "^5.14.5",
     "@nhost/react": "^0.13.0",
     "@reduxjs/toolkit": "^1.9.5",
     "@tailwindcss/forms": "^0.5.3",

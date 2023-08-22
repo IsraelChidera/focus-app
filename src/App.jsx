@@ -18,8 +18,8 @@ import { getCurrentUser } from './store/features/userSlice';
 function App() {
 
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.user.value);
-  // const user = "asasa";
+  // const user = useSelector((state) => state.user.value);
+  const user = "asasa";
   console.log(user);
 
   useEffect(() => {
