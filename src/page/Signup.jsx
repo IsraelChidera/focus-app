@@ -4,6 +4,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebase';
 import { Formik, Field, Form } from 'formik';
+import signup from '../components/assets/sign-up.svg';
 
 const Signup = () => {
     const navigate = useNavigate();
@@ -233,10 +234,7 @@ const Signup = () => {
                     </div>
 
                     <div className='bg-sidebar h-screen'>
-                        <div className='flex items-center justify-center h-screen'>
-                            {/* <p className='text-5xl text-center'>
-                                “Creativity is intelligence having fun”
-                            </p> */}
+                        <div className='flex items-center justify-center bg-no-repeat bg-center bg-cover h-screen' style={{ backgroundImage: "url('/bg-login.jpg')" }}>
                         </div>
                     </div>
                 </div>
