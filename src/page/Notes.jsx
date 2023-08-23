@@ -15,7 +15,7 @@ const Notes = () => {
 
   const [openSearchNotes, setOpenSearchNotes] = useState(false);
   const [notes, setNotes] = useState("");
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [user, setUser] = useState("");
   const [data, setData] = useState([]);
