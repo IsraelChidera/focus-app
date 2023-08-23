@@ -3,13 +3,13 @@ import Text from '../elements/Text';
 import Button from '../elements/Button';
 import { signOut } from "firebase/auth";
 import { auth } from '../../firebase';
-import { useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { BsPersonCircle } from 'react-icons/bs';
 import { Box, Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
-// import Button from '@mui/material/Button';
+import { FaBars } from 'react-icons/fa';
 
 const Navbar = () => {
     const [open, setOpen] = useState(false);
@@ -57,17 +57,41 @@ const Navbar = () => {
             onKeyDown={toggleDrawer(anchor, false)}
         >
             <Divider />
+
             <List>
-                {['All mail', 'Trash', 'Spam'].map((text, index) => (
-                    <ListItem key={text} disablePadding>
-                        <ListItemButton>
-                            <ListItemIcon>
-                                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                            </ListItemIcon>
-                            <ListItemText primary={text} />
-                        </ListItemButton>
-                    </ListItem>
-                ))}
+                <div>
+                    <ul>
+                        <Text className="pl-4 text-2xl mt-6 font-bold mb-12">
+                            Focus<span className="text-tertiary">Vest</span>
+                        </Text>
+
+                        <NavLink
+                            to="/home"
+                            className={({ isActive }) =>
+                                isActive ? "bg-secondary w-full block border-l-2 border-l-tertiary mr-2 py-3  text-sm"
+                                    :
+                                    "mr-2 text-sm py-3 "
+                            }
+                        >
+                            <li className="p-4 ">
+                                Home
+                            </li>
+                        </NavLink>
+
+                        <NavLink
+                            to="/notes"
+                            className={({ isActive }) =>
+                                isActive ? "bg-secondary w-full block border-l-2 border-l-tertiary mr-2 py-3  text-sm"
+                                    :
+                                    "mr-2 text-sm py-3 pl-4"
+                            }
+                        >
+                            <li className="p-4 ">
+                                Notes
+                            </li>
+                        </NavLink>
+                    </ul>
+                </div>
             </List>
         </Box>
     );
@@ -80,10 +104,10 @@ const Navbar = () => {
                 <div className='flex items-center space-x-2'>
                     <div className='md:hidden block'>
                         {['left'].map((anchor) => (
-                            <React.Fragment key={anchor}>
-                                <Button onClick={toggleDrawer(anchor, true)}>
-                                    <BsPersonCircle />
-                                </Button>
+                            <div className='flex items-center' key={anchor}>
+                                <button onClick={toggleDrawer(anchor, true)}>
+                                    <FaBars className='text-white' />
+                                </button>
                                 <SwipeableDrawer
                                     anchor={anchor}
                                     open={state[anchor]}
@@ -92,7 +116,7 @@ const Navbar = () => {
                                 >
                                     {list(anchor)}
                                 </SwipeableDrawer>
-                            </React.Fragment>
+                            </div>
                         ))}
                     </div>
                     <Text className="text-white font-bold text-xl">
