@@ -60,9 +60,9 @@ const Login = () => {
         <>
             <main >
                 <section>
-                    <div className="grid grid-cols-2 h-screen ">
-                        <div className='flex md:w-3/5 mx-auto flex-col justify-center h-screen'>
-                            <div className=" ">
+                    <div className="md:grid grid-cols-2 h-screen ">
+                        <div className='flex md:w-full w-4/5 mx-auto flex-col justify-center h-screen'>
+                            <div className=" w-4/5 mx-auto">
                                 <div>
                                     <Text className="text-2xl text-white text-center font-bold mb-2">
                                         Focus<span className="text-tertiary">App</span>
@@ -164,7 +164,7 @@ const Login = () => {
                         </div>
 
 
-                        <div className='bg-sidebar text-secondary h-screen'>
+                        <div className='bg-sidebar md:block hidden text-secondary h-screen'>
                             <div className='flex items-center justify-center bg-no-repeat bg-center bg-cover h-screen' style={{backgroundImage: "url('/bg-login.jpg')" }}>                                
                             </div>
                         </div>

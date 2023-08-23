@@ -80,9 +80,9 @@ const Signup = () => {
     return (
         <main >
             <section>
-                <div className="grid grid-cols-2 h-screen  ">
-                    <div className="w-full  ">
-                        <div className='flex md:w-3/5 mx-auto flex-col justify-center h-screen '>
+                <div className="grid md:grid-cols-2 h-screen  ">
+                    <div className="md:w-full w-4/5 mx-auto ">
+                        <div className='flex md:w-4/5  mx-auto flex-col justify-center h-screen '>
                             <div>
                                 <div>
                                     <Text className="text-2xl text-white text-center font-bold mb-2">
@@ -233,7 +233,7 @@ const Signup = () => {
                         </div>
                     </div>
 
-                    <div className='bg-sidebar h-screen'>
+                    <div className='bg-sidebar md:block hidden h-screen'>
                         <div className='flex items-center justify-center bg-no-repeat bg-center bg-cover h-screen' style={{ backgroundImage: "url('/bg-login.jpg')" }}>
                         </div>
                     </div>
