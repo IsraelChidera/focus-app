@@ -14,48 +14,16 @@ import Pomodoro from '../components/widgets/Pomodoro';
 // import { getAllUserNotes } from '../store/features/noteSlice';
 
 const Home = () => {
-    const [openTaskInput, setOpenTaskInput] = useState(false);
-    const [open, setOpen] = useState(false);
-    const [workMin, setWorkMin] = useState(45);
-    const [breakMin, setBreakMin] = useState(15);
-    const inputRef = useRef(null);
 
     const user = useSelector((state) => state.user.value);
     const { value, status } = useSelector((state) => state.note);
+    
     const dispatch = useDispatch();
 
     const navigate = useNavigate();
 
-    const [remainingTime, setRemainingTime] = useState({
-        seconds: '00',
-        minutes: '00',
-        hours: '00',
-        days: '00'
-    })
 
-    const handleTaskButton = () => {
-        setOpenTaskInput(true);
-        inputRef.current.focus();
-    }
-
-    const handleSettings = () => {
-        setOpen(true);
-    }
-
-    useEffect(() => {
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                // User is signed in, see docs for a list of available properties
-                // https://firebase.google.com/docs/reference/js/firebase.User
-                const uid = user.uid;
-                // ...
-                // console.log("uid", uid)
-            } else {
-                // User is signed out
-                // ...
-                // console.log("user is logged out")
-            }
-        });
+    useEffect(() => {      
 
         const intervalID = setInterval(() => {
             // console.log("yes")
@@ -67,11 +35,11 @@ const Home = () => {
     useEffect(() => {
         dispatch(getCurrentUser());
     }, [dispatch])
-    // console.log("user here: ", user);
+    // console.log("user here: ", user.uid);
 
     useEffect(() => {
-        dispatch(notesFetch(user))
-    }, [dispatch, user])
+        dispatch(notesFetch(user.uid))
+    }, [dispatch, user.uid])
 
 
     return (
@@ -121,7 +89,7 @@ const Home = () => {
                                         <Text style={{ fontSize: "10px" }} className='text-right px-2'>
                                             {note.dateCreated}
                                         </Text>
-                                        <div className='pt-2 border-b border-sidebar'></div>                                       
+                                        <div className='pt-2 border-b border-sidebar'></div>
 
                                         {note.notes.length >= 257 ? <div
                                             style={{ wordWrap: "break-word" }} className='p-2 text-xs'

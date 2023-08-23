@@ -21,10 +21,10 @@ export const { setCurrentUser } = userSlice.actions;
 export const getCurrentUser = () => (dispatch) => {
   onAuthStateChanged(auth, (user) => {
     if (user) {
-      const uid = user.uid;     
+      const uid = user;     
       dispatch(setCurrentUser(uid));
     } else {
-      console.log("Wahala de");
+      console.log("Unable to get current user");
     }
   });
 };

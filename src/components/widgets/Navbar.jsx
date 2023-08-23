@@ -1,21 +1,22 @@
 import React, { useState } from 'react';
 import Text from '../elements/Text';
-import Button from '../elements/Button';
 import { signOut } from "firebase/auth";
 import { auth } from '../../firebase';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { BsPersonCircle } from 'react-icons/bs';
-import { Box, Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
+import { Box, Divider, List } from '@mui/material';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import { FaBars } from 'react-icons/fa';
+import { useSelector } from 'react-redux';
+import { SpaOutlined } from '@mui/icons-material';
 
 const Navbar = () => {
     const [open, setOpen] = useState(false);
     const [state, setState] = useState({
         left: false,
     });
+
+    const user = useSelector((state) => state.user.value);
 
     const toggleDrawer = (anchor, open) => (event) => {
         if (
@@ -36,7 +37,7 @@ const Navbar = () => {
 
         signOut(auth).then(() => {
             // Sign-out successful.
-            navigate("/");
+            navigate("/login");
             console.log("Signed out successfully")
         }).catch((error) => {
             // An error happened.
@@ -120,7 +121,7 @@ const Navbar = () => {
                         ))}
                     </div>
                     <Text className="text-white font-bold text-xl">
-                        Welcome, <span className="italic"> Name </span>
+                        Welcome, <span> {user.displayName} </span>
                     </Text>
                 </div>
 

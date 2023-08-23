@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Text from '../components/elements/Text';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { auth } from '../firebase';
 import { Formik, Field, Form } from 'formik';
-import signup from '../components/assets/sign-up.svg';
 
 const Signup = () => {
     const navigate = useNavigate();
@@ -75,7 +74,22 @@ const Signup = () => {
                 console.log(errorCode, errorMessage);
                 // ..
             });
+
+        await updateProfile(auth.currentUser, {
+            displayName: `${values.firstName} ${values.lastName}`,
+        }).then(() => {
+            console.log("updated successfully");
+        }).catch((error) => {
+            console.log("error updating name");
+            console.log(error);
+        })
     }
+
+    const updateUser = () => {
+
+    }
+
+    updateUser();
 
     return (
         <main >
