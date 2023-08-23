@@ -13,6 +13,7 @@ import NoteDetail from './page/NoteDetail';
 import ProtectedRoute from './components/widgets/ProtectedRoute';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCurrentUser } from './store/features/userSlice';
+import NotFound from './page/NotFound';
 
 
 function App() {
@@ -29,7 +30,7 @@ function App() {
 
   return (
     <Router>
-      <div className="App bg-primary">
+      <div className="md:overflow-x-auto overflow-x-hidden bg-primary">
         <section>
           <div>
             <Routes>
@@ -55,8 +56,9 @@ function App() {
 
               </Route>
 
-              <Route path="/" element={<Signup />} />
-              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
+              <Route path="/" element={<Login />} />
+              <Route path="*" element={< NotFound />} />
             </Routes>
           </div>
         </section>

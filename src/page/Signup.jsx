@@ -63,7 +63,7 @@ const Signup = () => {
                 setLoading(false);
                 const user = userCredential.user;
                 console.log(user);
-                navigate("/login")
+                navigate("/")
                 // ...
             })
             .catch((error) => {
@@ -84,12 +84,7 @@ const Signup = () => {
             console.log(error);
         })
     }
-
-    const updateUser = () => {
-
-    }
-
-    updateUser();
+   
 
     return (
         <main >
@@ -240,7 +235,7 @@ const Signup = () => {
 
                             <p className="mt-10 text-sm text-white text-center">
                                 Already have an account?{' '}
-                                <NavLink to="/login" className="underline text-tertiary">
+                                <NavLink to="/" className="underline text-tertiary">
                                     Sign in
                                 </NavLink>
                             </p>

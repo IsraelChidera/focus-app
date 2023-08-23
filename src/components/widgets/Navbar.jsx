@@ -8,7 +8,6 @@ import { Box, Divider, List } from '@mui/material';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import { FaBars } from 'react-icons/fa';
 import { useSelector } from 'react-redux';
-import { SpaOutlined } from '@mui/icons-material';
 
 const Navbar = () => {
     const [open, setOpen] = useState(false);
@@ -37,7 +36,7 @@ const Navbar = () => {
 
         signOut(auth).then(() => {
             // Sign-out successful.
-            navigate("/login");
+            navigate("/");
             console.log("Signed out successfully")
         }).catch((error) => {
             // An error happened.
