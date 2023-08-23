@@ -61,8 +61,8 @@ const Login = () => {
             <main >
                 <section>
                     <div className="md:grid grid-cols-2 h-screen ">
-                        <div className='flex md:w-full w-4/5 mx-auto flex-col justify-center h-screen'>
-                            <div className=" md:w-4/5 ">
+                        <div className='flex flex-col justify-center h-screen'>
+                            <div className=" px-10 ">
                                 <div>
                                     <Text className="text-2xl text-white text-center font-bold mb-2">
                                         Focus<span className="text-tertiary">App</span>
