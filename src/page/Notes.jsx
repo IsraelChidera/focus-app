@@ -43,7 +43,7 @@ const Notes = () => {
       setLoading(false);
       setNotes("");
 
-     
+
 
     } catch (error) {
       console.error("Error adding document:", error);
@@ -144,7 +144,7 @@ const Notes = () => {
           onClick={handleAddNotesToDb}
           className="px-6 py-2 text-xs text-white bg-sidebar"
         >
-          {loading ? "Adding note . . ." : "Add note"}
+          {loading ? "Adding to list . . ." : "Add to budget list"}
         </button>
       </div>
 
@@ -152,7 +152,7 @@ const Notes = () => {
         {
           data.length == 0 && <div>
             <p>
-              You have no notes
+              You have no budget plan
             </p>
           </div>
         }

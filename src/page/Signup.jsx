@@ -95,7 +95,7 @@ const Signup = () => {
                             <div>
                                 <div>
                                     <Text className="text-2xl text-white text-center font-bold mb-2">
-                                        Focus<span className="text-tertiary">App</span>
+                                        Budget<span className="text-tertiary">App</span>
                                     </Text>
 
                                     <h2 className="text-white text-center text-sm md:text-xs tracking-tight text-gray-900">

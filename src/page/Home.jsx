@@ -52,7 +52,7 @@ const Home = () => {
                 <Card className="py-4 col-span-2">
                     <div className="flex justify-between">
                         <Text className="text-lg font-semibold mb-10">
-                            Notes
+                            Budget
                         </Text>
 
                         <div
@@ -66,17 +66,17 @@ const Home = () => {
                     <section className="flex justify-center items-center text-center">
                         <div>
                             <Text className="font-bold text-2xl">
-                                Stay focused
+                               What's your budget like?
                             </Text>
 
                             <Text className="pt-2 pb-6 text-sm">
-                                Add notes while on your focus sessions
+                                Keep track of your budget from one place.
                             </Text>
 
                             <Button
                                 onClick={() => navigate("/notes")}
                             >
-                                Add note
+                                Add budget
                             </Button>
                         </div>
                     </section>
