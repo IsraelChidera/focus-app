@@ -44,7 +44,7 @@ const Notes = () => {
       setNotes("");
 
 
-
+      return docRef;
     } catch (error) {
       console.error("Error adding document:", error);
       setError("Error adding the note.");
