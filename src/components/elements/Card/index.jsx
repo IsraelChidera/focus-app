@@ -1,13 +1,11 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 
-const index = ({children, className}) => {
+const Card = forwardRef(function Card({ children, className = '', as: Component = 'div', ...rest }, ref) {
   return (
-    <div       
-      className={`bg-card px-6 py-10 rounded-xl ${className}`}
-    >
+    <Component ref={ref} className={`rounded-2xl border border-line bg-surface shadow-card ${className}`} {...rest}>
       {children}
-    </div>
-  )
-}
+    </Component>
+  );
+});
 
-export default index
+export default Card;

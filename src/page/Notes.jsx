@@ -1,189 +1,238 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { BsPlusLg } from 'react-icons/bs';
-import { FiSearch } from 'react-icons/fi';
-import { collection, query, where, addDoc, getDocs } from "firebase/firestore";
-import { db, auth } from '../firebase';
-import { onAuthStateChanged } from 'firebase/auth';
-import { NavLink } from 'react-router-dom';
-import moment from 'moment/moment';
+import React, { useDeferredValue, useEffect, useMemo, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useSearchParams } from 'react-router-dom';
+import { FiFileText, FiPlus, FiSearch, FiX } from 'react-icons/fi';
+import useNotes from '../hooks/useNotes';
+import { selectUser } from '../store/features/userSlice';
+import { noteCreate } from '../store/features/noteSlice';
+import Card from '../components/elements/Card';
+import Button from '../components/elements/Button';
+import Alert from '../components/elements/Alert';
+import EmptyState from '../components/elements/EmptyState';
+import NoteCard, { NoteCardSkeleton } from '../components/widgets/NoteCard';
+import NoteEditor from '../components/widgets/NoteEditor';
+import AiPlanBuilder from '../components/widgets/AiPlanBuilder';
+import { planToHtml } from '../utils/plan';
+import { useToast } from '../components/widgets/Toast';
+import { getNoteTitle, htmlToText } from '../utils/format';
 
-
-import { CKEditor } from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+// Compare functions receive the indexed items built below. Undated legacy entries sort last.
+const SORTS = {
+  newest: { label: 'Newest first', compare: (a, b) => (b.note.createdAt || 0) - (a.note.createdAt || 0) },
+  oldest: { label: 'Oldest first', compare: (a, b) => (a.note.createdAt || Infinity) - (b.note.createdAt || Infinity) },
+  title: { label: 'Title A–Z', compare: (a, b) => a.displayTitle.localeCompare(b.displayTitle) },
+};
 
 const Notes = () => {
+  const dispatch = useDispatch();
+  const toast = useToast();
+  const user = useSelector(selectUser);
+  const { notes, isLoading, isError, error, retry } = useNotes();
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const [openSearchNotes, setOpenSearchNotes] = useState(false);
-  const [notes, setNotes] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [user, setUser] = useState("");
-  const [data, setData] = useState([]);
+  const [composerOpen, setComposerOpen] = useState(searchParams.get('new') === '1');
+  const [saving, setSaving] = useState(false);
+  // An AI plan the user chose to apply; NoteEditor loads it into the form.
+  const [draft, setDraft] = useState(null);
+  const [search, setSearch] = useState('');
+  const [sort, setSort] = useState('newest');
+  const deferredSearch = useDeferredValue(search);
+  const composerRef = useRef(null);
 
-  const handleOpenSearchTab = () => {
-    setOpenSearchNotes(prevState => !prevState);
-  }
-
-  const handleAddNotesToDb = async () => {
-    if (notes.trim() === "") {
-      setError("Notes cannot be empty.");
-      return;
+  // "New entry" links elsewhere point at ?new=1; open the composer and clean up the URL.
+  useEffect(() => {
+    if (searchParams.get('new') === '1') {
+      setComposerOpen(true);
+      setSearchParams({}, { replace: true });
     }
+  }, [searchParams, setSearchParams]);
 
+  useEffect(() => {
+    if (composerOpen) composerRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, [composerOpen]);
 
-    setLoading(true);
+  const indexed = useMemo(
+    () =>
+      notes.map((note) => {
+        const displayTitle = getNoteTitle(note);
+        return { note, displayTitle, haystack: `${displayTitle} ${htmlToText(note.notes)}`.toLowerCase() };
+      }),
+    [notes]
+  );
 
+  const visible = useMemo(() => {
+    const term = deferredSearch.trim().toLowerCase();
+    const matches = term ? indexed.filter((item) => item.haystack.includes(term)) : [...indexed];
+    return matches.sort(SORTS[sort].compare);
+  }, [indexed, deferredSearch, sort]);
+
+  const handleCreate = async ({ title, notes: content }) => {
+    setSaving(true);
     try {
-      const docRef = await addDoc(collection(db, "notes"), {
-        notes: notes,
-        uid: user,
-        dateCreated: moment().format("MMM Do YY")
-      });
-
-      setLoading(false);
-      setNotes("");
-
-
-      return docRef;
-    } catch (error) {
-      console.error("Error adding document:", error);
-      setError("Error adding the note.");
-    }
-
-  }
-
-  const fetchData = async () => {
-    try {
-      const q = query(collection(db, "notes"), where("uid", "==", user));
-      const querySnapshot = await getDocs(q);
-      const fetchedData = [];
-      querySnapshot.forEach((doc) => {
-        setLoading(false);
-        fetchedData.push({ id: doc.id, ...doc.data() });
-      });
-
-      setData(fetchedData);
-    } catch (error) {
-      console.error("Error fetching documents:", error);
+      await dispatch(noteCreate({ uid: user.uid, title, notes: content })).unwrap();
+      toast.success('Budget saved.');
+      closeComposer();
+      return undefined;
+    } catch (message) {
+      return { error: typeof message === 'string' ? message : 'Could not save this budget. Please try again.' };
+    } finally {
+      setSaving(false);
     }
   };
 
+  const handleApplyPlan = (plan) => {
+    setDraft({ title: plan.title, content: planToHtml(plan) });
+    toast.success('Plan added below. Tweak anything, then save.');
+  };
 
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        const uid = user.uid;
-        setUser(uid);
-      } else {
-        console.log("Wahala de");
-      }
-    });
-
-  }, [user])
-
-  useEffect(() => {
-    fetchData();
-  }, [user, notes])
-
+  const closeComposer = () => {
+    setComposerOpen(false);
+    setDraft(null);
+  };
 
   return (
-    <section className="text-white mt-10 mb-20 px-3 md:px-0">
-      {
-        openSearchNotes && <form className='mb-6 w-full relative'>
-          <input
-            type='search'
-            placeholder='Search ...'
-            className='text-secondary w-1/2 text-sm'
-          />
-        </form>
-      }
-
-
-      <div className='bg-sidebar'>
-
-        <div className='bg-sidebar px-4 py-2 flex justify-between items-center'>
-
-          <BsPlusLg className='text-white' />
-
-          <FiSearch className='text-white' onClick={handleOpenSearchTab} />
-
-        </div>
-
-
+    <div className="space-y-8">
+      <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          {error && <p style={{ color: "red" }} className='text-red-600 text-sm'>{error}</p>}
-          <form>
-
-            <div >
-              <CKEditor
-                editor={ClassicEditor}
-                data={notes}
-                className='w-full bg-sidebar text-sm'
-                onReady={editor => {
-                  // You can store the "editor" and use when it is needed.
-                  console.log('Editor is ready to use!', editor);
-                }}
-                onChange={(event, editor) => {
-                  const data = editor.getData();
-                  setNotes(data);
-                }}
-                onBlur={(event, editor) => {
-                }}
-                onFocus={(event, editor) => {
-                }}
-              />
-            </div>
-
-          </form>
+          <h1 className="text-2xl font-bold tracking-tight text-ink sm:text-3xl">Budgets</h1>
+          <p className="mt-1 text-sm text-muted">Every plan you've made, in one place.</p>
         </div>
-      </div>
+        {!composerOpen && (
+          <Button onClick={() => setComposerOpen(true)} className="self-start sm:self-auto">
+            <FiPlus className="h-4 w-4" aria-hidden="true" />
+            New budget
+          </Button>
+        )}
+      </header>
 
-      <div className='flex justify-end py-2'>
-        <button
-          type="submit"
-          onClick={handleAddNotesToDb}
-          className="px-6 py-2 text-xs text-white bg-sidebar"
-        >
-          {loading ? "Adding to list . . ." : "Add to budget list"}
-        </button>
-      </div>
-
-      <div className='mt-16 grid grid-container gap-x-4 gap-y-6 '>
-        {
-          data.length == 0 && <div>
-            <p>
-              You have no budget plan
-            </p>
+      {composerOpen && (
+        <Card as="section" ref={composerRef} aria-labelledby="composer-heading" className="scroll-mt-24 p-5 sm:p-6 animate-slide-up">
+          <h2 id="composer-heading" className="mb-4 text-base font-semibold text-ink">
+            New budget
+          </h2>
+          <AiPlanBuilder onApply={handleApplyPlan} />
+          <div className="my-6 flex items-center gap-3 text-xs font-medium uppercase tracking-wide text-muted">
+            <span className="h-px flex-1 bg-line" />
+            {draft ? 'Review and save' : 'Or write it yourself'}
+            <span className="h-px flex-1 bg-line" />
           </div>
-        }
+          <NoteEditor
+            draft={draft}
+            submitLabel="Save budget"
+            saving={saving}
+            onSubmit={handleCreate}
+            onCancel={closeComposer}
+          />
+        </Card>
+      )}
 
-        {
-          data.map((note) => (
-            <NavLink to={`/notes/${note.id}`} className='relative todo-weekly rounded-lg shadow-md' key={note.id}>
-              <p style={{ fontSize: "10px" }} className='text-right px-2'>
-                {note.dateCreated}
-              </p>
-              <div className='pt-2 border-b border-sidebar'></div>
+      {isError && (
+        <Alert>
+          <span>{error} </span>
+          <button type="button" onClick={retry} className="font-semibold underline underline-offset-2">
+            Try again
+          </button>
+        </Alert>
+      )}
 
-              {note.notes.length >= 257 ? <div
-                style={{ wordWrap: "break-word" }} className='p-2 text-xs'
-                dangerouslySetInnerHTML={{ __html: note.notes.substring(0, 257) + " . . ." }}
-              /> : <div
-                style={{ wordWrap: "break-word" }} className='p-2 text-xs'
-                dangerouslySetInnerHTML={{ __html: note.notes }}
-              />}
+      {(isLoading || notes.length > 0) && (
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+          <div className="relative flex-1">
+            <label htmlFor="note-search" className="sr-only">
+              Search budgets
+            </label>
+            <FiSearch className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" aria-hidden="true" />
+            <input
+              id="note-search"
+              type="search"
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+              placeholder="Search by title or content"
+              className="field pl-10 pr-10"
+              disabled={isLoading}
+            />
+            {search && (
+              <button
+                type="button"
+                onClick={() => setSearch('')}
+                className="absolute right-2 top-1/2 -translate-y-1/2 rounded p-1.5 text-muted hover:text-ink"
+                aria-label="Clear search"
+              >
+                <FiX className="h-4 w-4" />
+              </button>
+            )}
+          </div>
+          <label htmlFor="note-sort" className="sr-only">
+            Sort budgets
+          </label>
+          <select
+            id="note-sort"
+            value={sort}
+            onChange={(event) => setSort(event.target.value)}
+            className="field sm:w-44"
+            disabled={isLoading}
+          >
+            {Object.entries(SORTS).map(([value, { label }]) => (
+              <option key={value} value={value}>
+                {label}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
 
-              <div>
+      {isLoading ? (
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          {Array.from({ length: 6 }, (_, index) => (
+            <NoteCardSkeleton key={index} />
+          ))}
+        </div>
+      ) : notes.length === 0 ? (
+        !isError &&
+        !composerOpen && (
+          <Card>
+            <EmptyState
+              icon={FiFileText}
+              title="No budgets yet"
+              description="Describe your month to Envelo AI, or write a budget yourself. It takes about a minute."
+              action={
+                <Button onClick={() => setComposerOpen(true)}>
+                  <FiPlus className="h-4 w-4" aria-hidden="true" />
+                  Create your first budget
+                </Button>
+              }
+            />
+          </Card>
+        )
+      ) : visible.length === 0 ? (
+        <Card>
+          <EmptyState
+            icon={FiSearch}
+            title="No matching budgets"
+            description={`Nothing matches “${deferredSearch.trim()}”. Try a different word.`}
+            action={
+              <Button variant="secondary" onClick={() => setSearch('')}>
+                Clear search
+              </Button>
+            }
+          />
+        </Card>
+      ) : (
+        <>
+          <p className="text-sm text-muted" aria-live="polite">
+            {visible.length === notes.length
+              ? `${notes.length} ${notes.length === 1 ? 'budget' : 'budgets'}`
+              : `${visible.length} of ${notes.length} budgets`}
+          </p>
+          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+            {visible.map(({ note }) => (
+              <NoteCard key={note.id} note={note} />
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  );
+};
 
-              </div>
-            </NavLink>
-          ))
-        }
-
-
-      </div>
-    </section>
-  )
-}
-
-export default Notes
+export default Notes;

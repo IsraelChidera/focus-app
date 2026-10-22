@@ -1,41 +1,68 @@
-/** @type {import('tailwindcss').Config} */ 
+/** @type {import('tailwindcss').Config} */
+
+// Colors are CSS variables (see src/index.css) so light and dark themes
+// share one set of class names.
+const token = (name) => `rgb(var(--${name}) / <alpha-value>)`;
+
 module.exports = {
-  content: [
-    "./src/**/*.{js,jsx,ts,tsx}",
-  ],
-  // sidebr #202020
-// min #272727
-// boxes #323232
-// current nvbr #2d2d2d
+  content: ["./index.html", "./src/**/*.{js,jsx,ts,tsx}"],
+  darkMode: "media",
   theme: {
-    colors: {
-      'primary': '#1e272e',
-      'white': '#fff',
-      'secondary': '#3e3e3e',  
-      'tertiary': '#09c7e1',    
-      'card': '#222b32',
-      'sidebar': '#2b343b'
-    },
-    fontFamily: {
-      'headings': ['Poppins', 'sans-serif'],
-      'body': ['Montserrat', 'sans-serif'],
-    },
     extend: {
-      backgroundImage: {
-        'hero-img': "url('./components/assets/bg.png')",
-        'footer-img': "url('./components/assets/footerbg.png')"
+      colors: {
+        canvas: token("canvas"),
+        surface: token("surface"),
+        subtle: token("subtle"),
+        line: token("line"),
+        ink: token("ink"),
+        muted: token("muted"),
+        brand: {
+          DEFAULT: token("brand"),
+          strong: token("brand-strong"),
+          soft: token("brand-soft"),
+          ink: token("brand-ink"),
+        },
+        accent: {
+          DEFAULT: token("accent"),
+          ink: token("accent-ink"),
+        },
+        danger: {
+          DEFAULT: token("danger"),
+          soft: token("danger-soft"),
+        },
+        success: {
+          DEFAULT: token("success"),
+          soft: token("success-soft"),
+        },
+        warning: {
+          DEFAULT: token("warning"),
+          soft: token("warning-soft"),
+        },
       },
-      height: {
-        '128': '39rem',
-        '130': '32rem'
+      fontFamily: {
+        sans: ["Inter", "system-ui", "-apple-system", "Segoe UI", "Roboto", "sans-serif"],
       },
-      width: {        
-        '129': '59rem',
-        '131': '30rem'
-      }
+      boxShadow: {
+        card: "0 1px 2px rgb(16 24 40 / 0.04), 0 1px 3px rgb(16 24 40 / 0.06)",
+        lift: "0 12px 32px -12px rgb(16 24 40 / 0.18)",
+      },
+      keyframes: {
+        "fade-in": { from: { opacity: 0 }, to: { opacity: 1 } },
+        "slide-up": {
+          from: { opacity: 0, transform: "translateY(8px)" },
+          to: { opacity: 1, transform: "translateY(0)" },
+        },
+        "slide-in-left": {
+          from: { transform: "translateX(-100%)" },
+          to: { transform: "translateX(0)" },
+        },
+      },
+      animation: {
+        "fade-in": "fade-in 150ms ease-out",
+        "slide-up": "slide-up 200ms ease-out",
+        "slide-in-left": "slide-in-left 200ms ease-out",
+      },
     },
   },
-  plugins: [
-    require('@tailwindcss/forms'),
-  ],
-}
+  plugins: [require("@tailwindcss/forms")],
+};

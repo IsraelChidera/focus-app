@@ -1,71 +1,106 @@
-# Getting Started with Create React App
+# Envelo
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+**Know before you spend.** Envelo is an AI envelope-budgeting app. Describe your month in plain words and it builds your envelope budget; then, before you buy something, Spend Check tells you whether your budget can take it.
 
-## Available Scripts
+Built with React 18, Vite, Tailwind CSS, Redux Toolkit, Firebase (Auth + Firestore) and Google Gemini.
 
-In the project directory, you can run:
+## Features
 
-### `yarn start`
+- **AI Plan Builder.** Type something like "I earn ₦450k, rent is ₦150k, saving for December". Envelo returns envelopes with amounts, flags shortfalls and adds practical notes. The plan opens in the editor so you can change anything before saving.
+- **Spend Check.** On any budget, ask "Can I afford a ₦40,000 dinner?" and get a yes / careful / no answer, the envelope it should come from, and a suggestion.
+- A rich-text editor, search, sorting, a dashboard, light/dark themes and a mobile layout.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Getting started
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+1. Install dependencies:
 
-### `yarn test`
+   ```bash
+   npm install
+   ```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+2. Copy `.env.example` to `.env` and fill it in (see the comments in that file).
+   - `VITE_*` values are the Firebase web config. They are bundled into the browser app, which is expected for Firebase.
+   - `GEMINI_*`, `AI_TIMEOUT` and `MAX_RETRIES` are **server-only**. They are read by the AI endpoint and never shipped to the browser. Don't give them a `VITE_` prefix.
 
-### `yarn build`
+3. In the Firebase console, enable **Email/Password** sign-in.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+4. Start the dev server. The AI endpoint runs inside it, so no extra tools are needed:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+   ```bash
+   npm run dev
+   ```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## How the AI works
 
-### `yarn eject`
+```
+Browser ──(Firebase ID token)──▶ POST /api/ai ──▶ Gemini API
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+- `server/ai.mjs` holds all the AI logic: prompts, response schemas, validation, retries and error messages.
+- In development it is served by a small Vite middleware (`vite.config.js`). In production it runs as a Netlify Function (`netlify/functions/ai.mjs`).
+- Every request must carry a valid Firebase ID token, so only signed-in users can spend your Gemini quota.
+- Gemini returns structured JSON (a response schema), which the server checks and trims before it reaches the UI.
+- **Retries:** network errors, 5xx and short 429s are retried with exponential backoff, up to `MAX_RETRIES`, within `AI_TIMEOUT` seconds in total. Long quota limits fail fast with a clear message.
+- **Fallback model:** set `GEMINI_FALLBACK_MODEL` to switch retries to another model when the main one is overloaded.
+- **What Gemini sees:** only the text the user sends. That is their description for the Plan Builder, or the budget they're checking plus their question for Spend Check. Envelo has no bank access.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Gemini quota
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+The free tier is very small (for example, 20 requests per day per model, shared by all your users). For real use, enable billing on the Google AI project that owns `GEMINI_API_KEY`.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Deploying to Netlify
 
-## Learn More
+`netlify.toml` already sets the build command, the publish folder and the functions folder. In **Site settings → Environment variables**, add every variable from `.env.example`.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Netlify functions time out after **10 seconds** by default (26 seconds at most, on request), and Gemini can be slower than that under load. Set `AI_TIMEOUT` a little below your function timeout, and keep `GEMINI_THINKING_LEVEL=low` for faster answers.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Scripts
 
-### Code Splitting
+| Command         | What it does                                   |
+| --------------- | ---------------------------------------------- |
+| `npm run dev`   | Start the dev server (including `/api/ai`)     |
+| `npm run build` | Production build into `build/`                 |
+| `npm run serve` | Preview the production build (no AI endpoint)  |
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## Firestore
 
-### Analyzing the Bundle Size
+Budgets live in the `notes` collection:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+| Field         | Type      | Notes                                      |
+| ------------- | --------- | ------------------------------------------ |
+| `uid`         | string    | Owner's Firebase Auth uid                  |
+| `title`       | string    | Optional; older entries don't have one     |
+| `notes`       | string    | Rich-text HTML from the editor             |
+| `createdAt`   | timestamp | Used for sorting and stats                 |
+| `updatedAt`   | timestamp | Set on every edit                          |
+| `dateCreated` | string    | Legacy display date, kept for older builds |
 
-### Making a Progressive Web App
+Recommended security rules, so each user can only reach their own budgets:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+```
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /notes/{noteId} {
+      allow read, update, delete: if request.auth != null && resource.data.uid == request.auth.uid;
+      allow create: if request.auth != null && request.resource.data.uid == request.auth.uid;
+    }
+  }
+}
+```
 
-### Advanced Configuration
+## Project structure
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
-# focus-app
+```
+netlify/functions/  Production AI endpoint (thin wrapper)
+server/             Shared AI logic (prompts, schemas, retries, auth check)
+src/
+  components/
+    elements/       Reusable UI pieces (Button, Card, TextField, Alert, …)
+    widgets/        App pieces (AppShell, AiPlanBuilder, SpendCheck, NoteEditor, …)
+  hooks/            useNotes
+  page/             Route screens (Landing, Home, Notes, NoteDetail, auth pages)
+  services/         Client for the AI endpoint
+  store/            Redux slices for the user session and budgets
+  utils/            Formatting, validation, plan rendering, error messages
+```

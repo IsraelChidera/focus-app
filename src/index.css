@@ -1,83 +1,178 @@
-@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@100;400;500;600;700&family=Poppins:wght@100;400;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-* {
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
+/* ---------- Design tokens (RGB triplets for Tailwind alpha support) ---------- */
+:root {
+  /* Envelo brand: forest #0F3D2E, lime #C6F135, cream #F3F6EE (from the logo). */
+  --canvas: 244 246 239;
+  --surface: 255 255 255;
+  --subtle: 236 240 230;
+  --line: 222 228 214;
+  --ink: 16 32 26;
+  --muted: 91 106 98;
+  /* Forest: cream text on it is ~11:1, well above WCAG AA. */
+  --brand: 15 61 46;
+  --brand-strong: 26 82 62;
+  --brand-soft: 234 245 210;
+  --brand-ink: 243 246 238;
+  --accent: 198 241 53;
+  --accent-ink: 15 61 46;
+  --danger: 217 45 32;
+  --danger-soft: 254 236 235;
+  --success: 3 152 85;
+  --success-soft: 231 248 239;
+  --warning: 181 71 8;
+  --warning-soft: 254 243 226;
+  color-scheme: light;
 }
 
-.todo-weekly {
-  box-shadow: rgba(0, 0, 0, 0.55) 0px 5px 15px;
-  background: #1e272e;
-  height: 200px;
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
-body {
-  background: #1e272e;
-}
-
-.ck.ck-editor__main {
-  color: #334;
-}
-
-.grid-container {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-}
-
-.sidebar-width {
-  width: 18rem;
-}
-
-.main-width {
-  padding-left: 20rem;
-}
-
-@media only screen and (max-width: 768px) {
-  .grid-container {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .sidebar-width {
-    width: 0;
-  }
-
-  .main-width {
-    padding-left: 0rem;
-  }
-}
-
-@media only screen and (max-width: 330px) {
-  .grid-container {
-    grid-template-columns: repeat(1, 1fr);
-  }
-
-  .sidebar-width {
-    width: 0;
-  }
-
-  .main-width {
-    padding-left: 0rem;
+@media (prefers-color-scheme: dark) {
+  :root {
+    --canvas: 8 20 15;
+    --surface: 13 29 23;
+    --subtle: 20 40 32;
+    --line: 33 57 47;
+    --ink: 232 240 229;
+    --muted: 140 160 149;
+    /* Lime leads in dark mode, mirroring the logo's lime-on-forest. */
+    --brand: 198 241 53;
+    --brand-strong: 214 247 112;
+    --brand-soft: 30 52 28;
+    --brand-ink: 15 61 46;
+    --accent: 198 241 53;
+    --accent-ink: 15 61 46;
+    --danger: 249 112 102;
+    --danger-soft: 60 24 22;
+    --success: 50 213 131;
+    --success-soft: 16 50 34;
+    --warning: 253 176 34;
+    --warning-soft: 58 40 12;
+    color-scheme: dark;
   }
 }
 
-@media (min-width: 768px) and (max-width: 1000px) {
-  .grid-container {
-    grid-template-columns: repeat(3, 1fr);
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
   }
 
-  .sidebar-width {
-    width: 10rem;
+  body {
+    @apply bg-canvas font-sans text-ink antialiased;
   }
 
-  .main-width {
-    padding-left: 12rem;
+  ::selection {
+    @apply bg-brand/20;
+  }
+
+  :focus-visible {
+    @apply outline-none ring-2 ring-brand ring-offset-2 ring-offset-canvas;
   }
 }
+
+@layer components {
+  .field {
+    @apply block w-full rounded-lg border border-line bg-surface px-3.5 py-2.5 text-sm text-ink shadow-sm placeholder:text-muted/70 transition focus:border-brand focus:ring-2 focus:ring-brand/25;
+  }
+
+  .field-error {
+    @apply border-danger focus:border-danger focus:ring-danger/25;
+  }
+
+  .skeleton {
+    @apply animate-pulse rounded-md bg-subtle;
+  }
+}
+
+/* Tailwind 3.1 has no built-in line-clamp utilities. */
+@layer utilities {
+  .line-clamp-2,
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .line-clamp-2 { -webkit-line-clamp: 2; }
+  .line-clamp-3 { -webkit-line-clamp: 3; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ---------- Rendered rich-text (budget entries) ---------- */
+.rich-text {
+  @apply text-[15px] leading-7 text-ink;
+  overflow-wrap: anywhere;
+}
+.rich-text > * + * { @apply mt-3; }
+.rich-text h1, .rich-text h2 { @apply text-xl font-semibold; }
+.rich-text h3, .rich-text h4 { @apply text-lg font-semibold; }
+.rich-text a { @apply font-medium text-brand-strong underline underline-offset-2; }
+.rich-text ul { @apply list-disc pl-6; }
+.rich-text ol { @apply list-decimal pl-6; }
+.rich-text li + li { @apply mt-1; }
+.rich-text blockquote { @apply border-l-4 border-brand/40 pl-4 italic text-muted; }
+.rich-text strong { @apply font-semibold; }
+.rich-text figure.table { @apply overflow-x-auto; }
+.rich-text table { @apply w-full border-collapse text-sm; }
+.rich-text th, .rich-text td { @apply border border-line px-3 py-2 text-left; }
+.rich-text th { @apply bg-subtle font-semibold; }
+.rich-text img { @apply h-auto max-w-full rounded-lg; }
+
+/* ---------- CKEditor theming: map its variables onto our tokens ---------- */
+.ck {
+  --ck-font-face: Inter, system-ui, sans-serif;
+  --ck-border-radius: 8px;
+  --ck-color-base-background: rgb(var(--surface));
+  --ck-color-base-foreground: rgb(var(--subtle));
+  --ck-color-base-border: rgb(var(--line));
+  --ck-color-base-text: rgb(var(--ink));
+  --ck-color-text: rgb(var(--ink));
+  --ck-color-focus-border: rgb(var(--brand));
+  --ck-color-shadow-inner: transparent;
+  --ck-focus-ring: 1px solid rgb(var(--brand));
+  --ck-color-toolbar-background: rgb(var(--subtle));
+  --ck-color-toolbar-border: rgb(var(--line));
+  --ck-color-button-default-hover-background: rgb(var(--line));
+  --ck-color-button-default-active-background: rgb(var(--line));
+  --ck-color-button-on-background: rgb(var(--brand-soft));
+  --ck-color-button-on-hover-background: rgb(var(--brand-soft));
+  --ck-color-button-on-color: rgb(var(--brand-strong));
+  --ck-color-dropdown-panel-background: rgb(var(--surface));
+  --ck-color-dropdown-panel-border: rgb(var(--line));
+  --ck-color-panel-background: rgb(var(--surface));
+  --ck-color-panel-border: rgb(var(--line));
+  --ck-color-input-background: rgb(var(--surface));
+  --ck-color-input-border: rgb(var(--line));
+  --ck-color-input-text: rgb(var(--ink));
+  --ck-color-list-background: rgb(var(--surface));
+  --ck-color-list-button-hover-background: rgb(var(--subtle));
+  --ck-color-list-button-on-background: rgb(var(--brand-soft));
+  --ck-color-list-button-on-text: rgb(var(--brand-strong));
+  --ck-color-labeled-field-label-background: rgb(var(--surface));
+  --ck-color-tooltip-background: rgb(var(--ink));
+  --ck-color-tooltip-text: rgb(var(--surface));
+}
+
+.ck.ck-editor__editable_inline {
+  min-height: 220px;
+  padding: 0.5rem 1rem;
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.ck.ck-editor__editable_inline ul,
+.ck.ck-editor__editable_inline ol {
+  padding-left: 1.5rem;
+}
+.ck.ck-editor__editable_inline ul { list-style: disc; }
+.ck.ck-editor__editable_inline ol { list-style: decimal; }

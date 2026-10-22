@@ -1,25 +1,24 @@
-import React from 'react'
-import { Navigate, Outlet } from 'react-router-dom'
-import Sidebar from './Sidebar';
-import Navbar from './Navbar';
+import React from 'react';
+import { Navigate, Outlet, useLocation } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { selectAuthStatus, selectUser } from '../../store/features/userSlice';
+import FullPageLoader from './FullPageLoader';
+import AppShell from './AppShell';
 
-const ProtectedRoute = ({ user, children }) => {
-    if (!user) {
-        return <Navigate to="/" replace />
-    }
-    return children ? children : (
-        <section className="relative">
-            <div className="fixed top-0 left-0 h-screen bg-sidebar sidebar-width">
-                < Sidebar />
-            </div>
+/** Signed-in area. Unauthenticated visitors go to login, which returns them here afterwards. */
+const ProtectedRoute = () => {
+  const user = useSelector(selectUser);
+  const status = useSelector(selectAuthStatus);
+  const location = useLocation();
 
+  if (status === 'loading') return <FullPageLoader label="Checking your session" />;
+  if (!user) return <Navigate to="/login" replace state={{ from: location }} />;
 
-            <div className="main-width md:pr-4">
-                <Navbar />
-                <Outlet />
-            </div>
-        </section>
-    );
-}
+  return (
+    <AppShell>
+      <Outlet />
+    </AppShell>
+  );
+};
 
-export default ProtectedRoute
+export default ProtectedRoute;

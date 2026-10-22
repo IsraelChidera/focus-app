@@ -1,178 +1,72 @@
-import React, { useState } from 'react';
-import Text from '../components/elements/Text';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { Formik, Form } from 'formik';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebase';
-import { NavLink, useNavigate } from 'react-router-dom'
-import { Formik, Field, Form } from 'formik';
-import signup from '../components/assets/bg-login.jpg';
+import AuthLayout from '../components/widgets/AuthLayout';
+import TextField from '../components/elements/TextField';
+import Button from '../components/elements/Button';
+import Alert from '../components/elements/Alert';
+import { getAuthErrorMessage } from '../utils/errors';
+import { collectErrors, validateEmail } from '../utils/validation';
+
+const initialValues = { email: '', password: '' };
+
+const validate = (values) =>
+  collectErrors({
+    email: validateEmail(values.email),
+    password: values.password ? undefined : 'Enter your password.',
+  });
 
 const Login = () => {
-    const navigate = useNavigate();
-    const [errors, setErrors] = useState('');
-    const [loading, setLoading] = useState(false);
-
-    const initialValues = {
-        email: "",
-        password: "",
+  // On success the auth listener updates the store and PublicRoute redirects.
+  const onSubmit = async (values, { setStatus }) => {
+    setStatus(undefined);
+    try {
+      await signInWithEmailAndPassword(auth, values.email.trim(), values.password);
+    } catch (error) {
+      console.error('Sign in failed:', error);
+      setStatus(getAuthErrorMessage(error));
     }
+  };
 
-    const validateForm = (values) => {
-        const errors = {};
-
-        if (!values.email) {
-            errors.email = "Email is required";
-        } else if (
-            !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
-        ) {
-            errors.email = "Invalid email address";
-        }
-
-        if (!values.password) {
-            errors.password = "Password number is required";
-        } else if (values.password.length <= 8) {
-            errors.password = "Password length must be more than 7"
-        }
-
-        return errors;
-    }
-
-    const onLogin = (values) => {
-        setLoading(true);
-        signInWithEmailAndPassword(auth, values.email, values.password)
-            .then((userCredential) => {
-                // Signed in 
-                setLoading(false);
-                const user = userCredential.user;
-                navigate("/home")
-                console.log(user);
-            })
-            .catch((error) => {
-                const errorCode = error.code;
-                const errorMessage = error.message;
-                setErrors(errorMessage);
-                setLoading(false);
-                console.log(errorCode, errorMessage)
-            });
-
-    }
-
-    return (
+  return (
+    <AuthLayout
+      title="Welcome back"
+      subtitle="Sign in to pick up where you left off."
+      footer={
         <>
-            <main >
-                <section>
-                    <div className="md:grid grid-cols-2 h-screen ">
-                        <div className='flex flex-col justify-center h-screen'>
-                            <div className=" px-10 ">
-                                <div>
-                                    <Text className="text-2xl text-white text-center font-bold mb-2">
-                                        Budget<span className="text-tertiary">App</span>
-                                    </Text>
-
-                                    <h2 className="text-white text-center md:text-sm text-xs tracking-tight text-gray-900">
-                                        Welcome back! Login to your account
-                                    </h2>
-                                </div>
-
-                                <div className='mt-4 text-xs' style={{ color: "red" }}>
-                                    {errors && errors}
-                                </div>
-
-                                <div>
-                                    <Formik
-                                        initialValues={initialValues}
-                                        validate={validateForm}
-                                        onSubmit={(values) => onLogin(values)}
-                                    >
-                                        {
-                                            ({
-                                                values,
-                                                errors,
-                                                touched,
-                                                handleChange,
-                                                handleBlur,
-                                                handleSubmit,
-                                                isSubmitting
-                                            }) => (
-                                                <Form className="mt-8 space-y-6" >
-                                                    <div className=" space-y-6 rounded-md shadow-sm">
-
-
-                                                        <div>
-                                                            <label htmlFor="email-address" className="sr-only">
-                                                                Email address
-                                                            </label>
-                                                            <Field
-                                                                type="email"
-                                                                id="email"
-                                                                name="email"
-                                                                value={values.email}
-                                                                onChange={handleChange}
-                                                                className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                                                                placeholder="Email address"
-                                                            />
-
-                                                            <p className='text-xs' style={{ color: 'red' }}>
-                                                                {errors.email && touched.email && errors.email}
-                                                            </p>
-                                                        </div>
-
-                                                        <div>
-                                                            <label htmlFor="password" className="sr-only">
-                                                                Password
-                                                            </label>
-                                                            <Field
-                                                                type="password"
-                                                                id="password"
-                                                                name="password"
-                                                                value={values.password}
-                                                                onChange={handleChange}
-                                                                className="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                                                                placeholder="Password"
-                                                            />
-
-                                                            <p className='text-xs' style={{ color: 'red' }}>
-                                                                {errors.password && touched.password && errors.password}
-                                                            </p>
-                                                        </div>
-                                                    </div>
-
-                                                    <div>
-                                                        <button
-                                                            type="submit"
-                                                            className="group relative flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                                                        >
-                                                            <span>
-                                                                {loading ? "Logging in ..." : " Login "}
-                                                            </span>
-                                                        </button>
-                                                    </div>
-
-                                                </Form>
-                                            )
-                                        }
-                                    </Formik>
-                                </div>
-
-                            </div>
-
-                            <p className="text-sm mt-10 text-white text-center">
-                                No account yet?{' '}
-                                <NavLink to="/signup" className="underline text-tertiary">
-                                    Sign up
-                                </NavLink>
-                            </p>
-                        </div>
-
-
-                        <div className='bg-sidebar md:block hidden text-secondary h-screen'>
-                            <div className='flex items-center justify-center bg-no-repeat bg-center bg-cover h-screen' style={{backgroundImage: "url('/bg-login.jpg')" }}>                                
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            </main>
+          New to Envelo?{' '}
+          <Link to="/signup" className="font-semibold text-brand-strong hover:underline">
+            Create an account
+          </Link>
         </>
-    )
-}
+      }
+    >
+      <Formik initialValues={initialValues} validate={validate} onSubmit={onSubmit}>
+        {({ isSubmitting, status, setStatus }) => (
+          <Form noValidate className="space-y-5">
+            <Alert onDismiss={() => setStatus(undefined)}>{status}</Alert>
 
-export default Login
+            <TextField label="Email" name="email" type="email" autoComplete="email" placeholder="you@example.com" autoFocus />
+
+            <div>
+              <TextField label="Password" name="password" type="password" autoComplete="current-password" placeholder="Your password" />
+              <div className="mt-2 text-right">
+                <Link to="/forgot-password" className="text-xs font-semibold text-brand-strong hover:underline">
+                  Forgot password?
+                </Link>
+              </div>
+            </div>
+
+            <Button type="submit" size="lg" className="w-full" loading={isSubmitting}>
+              {isSubmitting ? 'Signing in…' : 'Sign in'}
+            </Button>
+          </Form>
+        )}
+      </Formik>
+    </AuthLayout>
+  );
+};
+
+export default Login;
